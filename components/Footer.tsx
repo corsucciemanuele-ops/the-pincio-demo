@@ -1,0 +1,51 @@
+"use client";
+
+import HeadingReveal from "./HeadingReveal";
+import Crystal from "./Crystal";
+
+export default function Footer() {
+  return (
+    <footer className="relative overflow-hidden bg-ink text-cream">
+      <div className="container-edge py-28 sm:py-40">
+        <HeadingReveal
+          className="max-w-4xl font-display text-[clamp(2rem,5.5vw,4.6rem)] font-light leading-[1.04] text-cream"
+          lines={[
+            "Tutti sanno cosa è stato.",
+            <em key="i" className="italic text-gold-soft">
+              Presto saprete cosa diventerà.
+            </em>,
+          ]}
+        />
+
+        <div className="mt-24 grid grid-cols-1 gap-10 border-t border-cream/15 pt-12 sm:grid-cols-3">
+          <div className="flex items-center gap-3 text-gold-soft">
+            <Crystal className="h-8 w-7" />
+            <span className="font-display text-2xl text-cream">The Pincio</span>
+          </div>
+          <div className="space-y-2">
+            <p className="label text-cream/45">The Pincio · Pool • Bites • Bar</p>
+            <p className="label text-cream/45">
+              Estate 2027 · Vista Lago di Mercatale
+            </p>
+          </div>
+          <div className="space-y-2 sm:text-right">
+            <p className="label text-cream/45">
+              Via Colle Igea 22/B — Sassocorvaro Auditore (PU)
+            </p>
+            <p className="label text-cream/45">© Pincio di Valentini Annita Srl</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Oversized watermark wordmark */}
+      <div
+        aria-hidden
+        className="pointer-events-none select-none overflow-hidden"
+      >
+        <p className="-mb-[2.5vw] text-center font-display text-[22vw] font-light leading-none text-cream/[0.04]">
+          Pincio
+        </p>
+      </div>
+    </footer>
+  );
+}

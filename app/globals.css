@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --paper: #f5f0e6;
+  --paper-rgb: 245, 240, 230;
+  --ink: #26251f;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html {
+  /* Lenis controls scrolling; native smooth would fight it */
+  scroll-behavior: auto;
+}
+
+html,
+body {
+  background-color: var(--paper);
+  color: var(--ink);
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+::selection {
+  background: rgba(94, 111, 98, 0.22);
+  color: var(--ink);
+}
+
+/* Thin custom scrollbar — restrained */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+@layer components {
+  .container-edge {
+    @apply mx-auto w-full max-w-[1440px] px-6 sm:px-10 lg:px-16;
+  }
+
+  .label {
+    @apply font-sans text-[11px] uppercase tracking-label text-stone;
+  }
+
+  /* Masked line reveal — each line lives in an overflow-hidden wrapper */
+  .reveal-line {
+    overflow: hidden;
+    display: block;
+  }
+  .reveal-line > span {
+    display: block;
+    will-change: transform;
+  }
+
+  .hairline {
+    @apply h-px w-full bg-ink/15;
+  }
+
+  /* Film grain over atmospheric panels */
+  .grain::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+}
+
+/* Magnetic button base */
+.magnetic {
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+  }
+}
