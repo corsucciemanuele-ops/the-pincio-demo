@@ -101,7 +101,7 @@ export default function Gallery() {
 
       <div
         ref={track}
-        className="flex h-screen w-max items-center gap-6 px-6 will-change-transform sm:gap-8 sm:px-10"
+        className="flex h-screen w-max items-end gap-6 px-6 pb-[7vh] will-change-transform sm:gap-8 sm:px-10"
       >
         {PANELS.map((p, i) => (
           <figure

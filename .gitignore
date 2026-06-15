@@ -29,3 +29,8 @@ next-env.d.ts
 
 # vercel
 .vercel
+
+# local verification artifacts (screenshots + playwright harness)
+/shots
+shoot.js
+diag.js

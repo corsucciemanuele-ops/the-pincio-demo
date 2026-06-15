@@ -90,15 +90,19 @@ export default function Hero() {
       ref={root}
       className="relative flex h-[100svh] min-h-[640px] w-full items-end overflow-hidden"
     >
-      {/* Layer 0 — water */}
-      <div ref={backdrop} className="absolute inset-0 -z-20">
+      {/* Layer 0 — water (paint order handles depth; no negative z so it
+          never falls behind the page background) */}
+      <div ref={backdrop} className="absolute inset-0 z-0">
         <WaterBackdrop />
       </div>
+
+      {/* Legibility scrim — a soft paper wash only at the very foot */}
+      <div className="pointer-events-none absolute inset-x-0 bottom-0 z-0 h-1/3 bg-gradient-to-t from-cream/75 to-transparent" />
 
       {/* Layer 1 — ridgeline */}
       <div
         ref={ridge}
-        className="pointer-events-none absolute inset-x-0 bottom-[14%] -z-10"
+        className="pointer-events-none absolute inset-x-0 bottom-[14%] z-0"
       >
         <Ridge className="h-[26vh] w-full text-sage-deep/25" />
       </div>
