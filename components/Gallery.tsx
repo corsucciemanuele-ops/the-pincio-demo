@@ -27,6 +27,7 @@ export default function Gallery() {
     if (!section || !el) return;
     if (prefersReducedMotion()) return; // fall back to native horizontal scroll
 
+    const cleanups: (() => void)[] = [];
     const ctx = gsap.context(() => {
       const getScroll = () => el.scrollWidth - window.innerWidth;
 
@@ -43,6 +44,19 @@ export default function Gallery() {
           anticipatePin: 1,
         },
       });
+
+      // Velocity warp — frames skew/stretch with scroll speed (Immersive Garden).
+      const lenis = (window as unknown as { __lenis?: { velocity: number } }).__lenis;
+      let cur = 0;
+      const warp = () => {
+        const v = lenis ? lenis.velocity : 0;
+        cur += (v - cur) * 0.1;
+        const sk = gsap.utils.clamp(-6, 6, cur * 0.05);
+        el.style.setProperty("--vs", String(sk));
+        el.style.setProperty("--vc", String(1 + Math.min(0.06, Math.abs(cur) * 0.0006)));
+      };
+      gsap.ticker.add(warp);
+      cleanups.push(() => gsap.ticker.remove(warp));
 
       // Subtle parallax on each panel's inner image as it crosses.
       gsap.utils.toArray<HTMLElement>("[data-panel-img]").forEach((img) => {
@@ -65,7 +79,10 @@ export default function Gallery() {
       });
     }, root);
 
-    return () => ctx.revert();
+    return () => {
+      cleanups.forEach((fn) => fn());
+      ctx.revert();
+    };
   }, []);
 
   return (
@@ -92,6 +109,7 @@ export default function Gallery() {
           <figure
             key={i}
             className="relative h-[86vh] w-[90vw] shrink-0 overflow-hidden rounded-[4px] shadow-[0_60px_110px_-50px_rgba(0,0,0,0.85)] ring-1 ring-white/10 sm:w-[72vw] lg:w-[56vw]"
+            style={{ transform: "skewX(calc(var(--vs,0) * 1deg)) scaleY(var(--vc,1))" }}
           >
             <div data-panel-img className="absolute inset-0 will-change-transform">
               <GalleryFrame kind={p.kind} />

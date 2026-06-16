@@ -4,16 +4,16 @@ import { useEffect, useRef } from "react";
 import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import DepthScene from "./depth/DepthScene";
 import HeadingReveal from "./HeadingReveal";
+import MediaSlot from "./MediaSlot";
 
-type Dish = { name: string; note: string; plate: string; food: string };
+type Dish = { name: string; note: string; slot: string; poster: string };
 
-// Placeholder plating — engineered to be swapped for real photography.
-// Drop a real image into the .dish-photo slot and remove the gradients.
+// Reserved, graded frames — drop real plating photography into the slots.
 const DISHES: Dish[] = [
-  { name: "Crudo di lago", note: "Apertura", plate: "#F4EFE6", food: "radial-gradient(circle at 50% 45%, #F0A39A, #D9685F 60%, transparent 72%)" },
-  { name: "Tagliolini, agrumi", note: "Primo", plate: "#F2ECE0", food: "radial-gradient(circle at 50% 50%, #F2C56A, #D99A3C 62%, transparent 74%)" },
-  { name: "Pesce, erbe del colle", note: "Secondo", plate: "#F4EFE6", food: "radial-gradient(circle at 50% 48%, #CDE3C2, #88B07E 60%, transparent 73%)" },
-  { name: "Dolce al tramonto", note: "Fine", plate: "#F2ECE0", food: "radial-gradient(circle at 50% 50%, #F4B79C, #E4806A 60%, transparent 74%)" },
+  { name: "Crudo di lago", note: "Apertura", slot: "food-1", poster: "linear-gradient(160deg,#F3E7CE,#E1B98E 60%,#B07A4E)" },
+  { name: "Tagliolini, agrumi", note: "Primo", slot: "food-2", poster: "linear-gradient(160deg,#F4ECD6,#E6C77E 60%,#C08A3C)" },
+  { name: "Pesce, erbe del colle", note: "Secondo", slot: "food-3", poster: "linear-gradient(160deg,#EAE9D0,#AEC29A 60%,#6E8A66)" },
+  { name: "Dolce al tramonto", note: "Fine", slot: "food-4", poster: "linear-gradient(160deg,#F4DAC6,#E68E72 58%,#B0506A)" },
 ];
 
 export default function FoodExperience() {
@@ -24,23 +24,8 @@ export default function FoodExperience() {
     if (!el || prefersReducedMotion()) return;
     const ctx = gsap.context(() => {
       gsap.utils.toArray<HTMLElement>("[data-dish]").forEach((card, i) => {
-        // Emerge from depth: rise + scale + fade as it enters.
-        gsap.fromTo(
-          card,
-          { y: 90, scale: 0.9, autoAlpha: 0 },
-          {
-            y: 0,
-            scale: 1,
-            autoAlpha: 1,
-            duration: 1.2,
-            ease: "power3.out",
-            delay: (i % 2) * 0.08,
-            scrollTrigger: { trigger: card, start: "top 88%" },
-          }
-        );
-        // Continuous gentle float + parallax lift through the section.
         gsap.to(card, {
-          yPercent: -12 - (i % 3) * 6,
+          yPercent: -10 - (i % 3) * 6,
           ease: "none",
           scrollTrigger: { trigger: el, start: "top bottom", end: "bottom top", scrub: true },
         });
@@ -51,10 +36,9 @@ export default function FoodExperience() {
 
   return (
     <section id="food" ref={root} className="relative overflow-hidden bg-whitewash">
-      {/* warm light wash */}
       <div
         className="pointer-events-none absolute inset-0"
-        style={{ background: "radial-gradient(60% 50% at 80% 0%, rgba(255,193,120,0.18), transparent 60%)" }}
+        style={{ background: "radial-gradient(60% 50% at 82% 0%, rgba(255,193,120,0.16), transparent 60%)" }}
       />
       <div className="container-edge relative z-10 py-28 sm:py-36">
         <div className="max-w-3xl">
@@ -69,25 +53,22 @@ export default function FoodExperience() {
           </p>
         </div>
 
-        <DepthScene className="relative mt-20" intensity={1.2} perspective={900}>
-          <div className="grid grid-cols-2 gap-6 sm:gap-10 lg:grid-cols-4">
+        <DepthScene className="relative mt-20" intensity={1.1} perspective={1100}>
+          <div className="grid grid-cols-2 gap-5 sm:gap-8 lg:grid-cols-4">
             {DISHES.map((d, i) => (
-              <article
-                key={i}
-                data-dish
-                className="dish group"
-                style={{ marginTop: `${(i % 2) * 36}px` }}
-              >
-                <div className="dish-tilt relative aspect-square w-full overflow-hidden rounded-full shadow-[0_40px_60px_-30px_rgba(60,40,20,0.5)] ring-1 ring-black/5">
-                  {/* PLATE — replace this block with a real photo */}
-                  <div className="dish-photo absolute inset-0" style={{ background: d.plate }}>
-                    <div className="absolute inset-[14%] rounded-full" style={{ background: d.food }} />
-                    <div className="absolute inset-0 rounded-full" style={{ boxShadow: "inset 0 10px 26px -10px rgba(0,0,0,0.18)" }} />
-                  </div>
-                </div>
-                <div className="mt-5 flex items-baseline justify-between">
-                  <p className="font-display text-xl text-ink">{d.name}</p>
-                  <span className="label text-stone">{d.note}</span>
+              <article key={i} data-dish className="dish group" style={{ marginTop: `${(i % 2) * 40}px` }}>
+                <div className="dish-tilt">
+                  <MediaSlot
+                    slot={d.slot}
+                    poster={d.poster}
+                    className="aspect-[3/4] w-full rounded-[3px] shadow-[0_44px_70px_-34px_rgba(60,40,20,0.55)] ring-1 ring-black/5"
+                    overlay="linear-gradient(to top, rgba(20,12,8,0.35), transparent 55%)"
+                  >
+                    <div className="absolute bottom-5 left-5 z-10">
+                      <p className="font-display text-xl text-white drop-shadow-[0_2px_8px_rgba(0,0,0,0.5)]">{d.name}</p>
+                      <span className="label text-white/70">{d.note}</span>
+                    </div>
+                  </MediaSlot>
                 </div>
               </article>
             ))}
@@ -97,17 +78,13 @@ export default function FoodExperience() {
 
       <style jsx>{`
         .dish-tilt {
-          transform: perspective(900px)
-            rotateX(calc(var(--my, 0) * -7deg))
-            rotateY(calc(var(--mx, 0) * 7deg));
-          transition: transform 0.25s ease-out, box-shadow 0.5s ease;
+          transform: perspective(1100px) rotateX(calc(var(--my, 0) * -6deg)) rotateY(calc(var(--mx, 0) * 6deg));
+          transition: transform 0.3s ease-out;
           transform-style: preserve-3d;
           will-change: transform;
         }
         .dish:hover .dish-tilt {
-          transform: perspective(900px)
-            rotateX(calc(var(--my, 0) * -7deg))
-            rotateY(calc(var(--mx, 0) * 7deg)) translateZ(30px) scale(1.03);
+          transform: perspective(1100px) rotateX(calc(var(--my, 0) * -6deg)) rotateY(calc(var(--mx, 0) * 6deg)) translateZ(26px) scale(1.03);
         }
       `}</style>
     </section>

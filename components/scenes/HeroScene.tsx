@@ -3,109 +3,70 @@
 import DepthScene from "../depth/DepthScene";
 import Layer from "../depth/Layer";
 import { Grain, Vignette, Bloom } from "../depth/Atmosphere";
-import { Hills, Palm, Loungers } from "./primitives";
-import PoolBand from "./PoolBand";
-
-const HORIZON = 48; // % from top — the lake line
+import MediaSlot from "../MediaSlot";
 
 /**
- * Mediterranean pool-club hero at sunset — seven parallax planes:
- * 1 cielo · 2 colline · 3 lago · 4 vegetazione · 5 piscina · 6 persone · 7 logo
- * Each plane drifts at its own rate on scroll and pointer.
+ * Cinematic golden-hour hero. A full-bleed graded field (the slot for the real
+ * drone video) with translucent atmosphere planes drifting in front at
+ * different depths — so depth is felt even over flat media. No illustration.
  */
+const HERO_POSTER =
+  "radial-gradient(120% 80% at 64% 20%, rgba(255,224,168,0.92), transparent 52%)," +
+  "radial-gradient(90% 70% at 28% 30%, rgba(236,106,134,0.55), transparent 58%)," +
+  "linear-gradient(to bottom, #241F4E 0%, #6E4670 24%, #DC6F88 42%, #F4A06E 56%, #36AEBE 84%, #0E7280 100%)";
+
 export default function HeroScene() {
   return (
-    <DepthScene className="absolute inset-0" intensity={1.05}>
-      {/* 1 — CIELO: warm sunset sky, deeper above, blazing at the horizon */}
-      <Layer depth={4} scroll={4} scale={1.18}>
+    <DepthScene className="absolute inset-0" intensity={1}>
+      {/* base — the real video drops in here later (full-bleed) */}
+      <Layer depth={5} scroll={7} scale={1.12}>
+        <MediaSlot slot="hero" poster={HERO_POSTER} reveal={false} className="h-full w-full" />
+      </Layer>
+
+      {/* drifting warm light field */}
+      <Layer depth={16} scroll={10} blur={24}>
         <div
           className="h-full w-full"
           style={{
             background:
-              "linear-gradient(to bottom, #2C3360 0%, #7E5A86 16%, #E0758C 32%, #F49A6E 42%, #FFC178 48%)",
+              "radial-gradient(40% 30% at 62% 40%, rgba(255,236,196,0.7), transparent 70%)",
           }}
         />
       </Layer>
 
-      {/* sun + bloom sinking to the horizon */}
-      <Layer depth={8} scroll={3}>
+      {/* soft horizon haze that separates the planes */}
+      <Layer depth={28} scroll={14}>
         <div
-          className="h-full w-full"
+          className="absolute inset-x-0"
           style={{
-            background:
-              "radial-gradient(22% 16% at 60% 46%, rgba(255,248,224,1), rgba(255,206,150,0.6) 45%, transparent 70%)",
+            top: "44%",
+            height: "20%",
+            background: "linear-gradient(to bottom, transparent, rgba(255,210,160,0.5) 50%, transparent)",
+            filter: "blur(14px)",
           }}
         />
       </Layer>
 
-      {/* 2 — COLLINE: receding ridges across the water */}
-      <Layer depth={15} scroll={9} blur={2.6}>
-        <Hills color="#B9789A" baseline={HORIZON - 5} amp={5} variant={3} />
-      </Layer>
-      <Layer depth={24} scroll={13} blur={1}>
-        <Hills color="#7C5E84" baseline={HORIZON - 1} amp={4} variant={0} />
-      </Layer>
-
-      {/* 3 — LAGO: the lake catching the sky, then the infinity pool below */}
-      <Layer depth={34} scroll={11}>
-        <div className="absolute inset-x-0" style={{ top: `${HORIZON}%`, height: "16%" }}>
-          <div
-            className="h-full w-full"
-            style={{
-              background: "linear-gradient(to bottom, #E9879A, #C77E96 60%, #6E6E8E)",
-            }}
-          />
-          <div
-            className="absolute inset-0 mix-blend-screen"
-            style={{ background: "radial-gradient(40% 120% at 60% 0%, rgba(255,210,150,0.6), transparent 70%)" }}
-          />
-        </div>
-      </Layer>
-
-      {/* 4 — VEGETAZIONE: palms framing the deck */}
-      <Layer depth={70} scroll={16} blur={0.4}>
-        <div className="absolute bottom-[14%] left-[-2%]" style={{ width: "26%", height: "74%" }}>
-          <Palm color="#161E18" />
-        </div>
-      </Layer>
-      <Layer depth={86} scroll={20} blur={0.6}>
-        <div className="absolute bottom-[16%] right-[-3%]" style={{ width: "22%", height: "62%" }}>
-          <Palm color="#10160F" flip />
-        </div>
-      </Layer>
-
-      {/* 5 — PISCINA: turquoise infinity pool, WebGL caustics on top */}
-      <Layer depth={48} scroll={8}>
-        <div className="absolute inset-x-0 bottom-0" style={{ top: `${HORIZON + 16}%` }}>
-          <PoolBand
-            webgl
-            reflection="linear-gradient(to bottom, #8FE0E2 0%, #38B6C6 30%, #1290A2 64%, #0C6E80 100%)"
-            tint="#2BB6C4"
-          />
-        </div>
-      </Layer>
-
-      {/* 6 — PERSONE: loungers, parasol, distant figures on the white deck */}
-      <Layer depth={62} scroll={12}>
-        <div className="absolute inset-x-0" style={{ top: `${HORIZON + 9}%`, height: "20%" }}>
-          <Loungers color="rgba(255,250,242,0.92)" shade="rgba(20,30,40,0.25)" />
-        </div>
-      </Layer>
-
-      {/* white pool deck foreground */}
-      <Layer depth={96} scroll={6}>
-        <div className="absolute inset-x-0 bottom-0" style={{ height: "9%" }}>
-          <div
-            className="h-full w-full"
-            style={{ background: "linear-gradient(to bottom, #F4EFE6, #E7DCCB)" }}
-          />
-        </div>
+      {/* near light-leak haze, heavily blurred (depth-of-field foreground) */}
+      <Layer depth={64} scroll={8} blur={40}>
+        <div
+          className="absolute inset-x-0 bottom-0"
+          style={{
+            height: "42%",
+            background:
+              "radial-gradient(70% 90% at 20% 110%, rgba(43,182,196,0.55), transparent 70%)",
+          }}
+        />
       </Layer>
 
       {/* atmosphere */}
-      <Bloom x={60} y={46} color="rgba(255,180,120,0.4)" size={85} />
-      <Grain opacity={0.04} />
-      <Vignette strength={0.4} />
+      <Bloom x={64} y={26} color="rgba(255,196,140,0.45)" size={80} />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ background: "linear-gradient(to bottom, rgba(20,16,40,0.28) 0%, transparent 30%, transparent 62%, rgba(8,30,36,0.4) 100%)" }}
+      />
+      <Grain opacity={0.05} />
+      <Vignette strength={0.46} />
     </DepthScene>
   );
 }

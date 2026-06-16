@@ -1,3 +1,4 @@
+import Preloader from "@/components/Preloader";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import Marquee from "@/components/Marquee";
@@ -15,6 +16,7 @@ import ScrollProgress from "@/components/ScrollProgress";
 export default function Home() {
   return (
     <>
+      <Preloader />
       <ScrollProgress />
       <Header />
       <main>
