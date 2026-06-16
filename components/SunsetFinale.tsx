@@ -76,7 +76,7 @@ export default function SunsetFinale() {
         <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center">
           <div className="finale-logo flex flex-col items-center opacity-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-white.png" alt="The Pincio" className="w-[min(72vw,440px)] drop-shadow-[0_8px_40px_rgba(0,0,0,0.6)]" />
+            <img src="/logo-white.svg" alt="The Pincio" className="w-[min(72vw,440px)] drop-shadow-[0_8px_40px_rgba(0,0,0,0.6)]" />
           </div>
           <p className="finale-tag mt-6 font-display text-2xl italic text-white/85 opacity-0 sm:text-3xl">
             L&apos;estate ha un indirizzo.

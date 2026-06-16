@@ -13,7 +13,7 @@ export default function Gallery() {
       <div className="container-edge py-28 sm:py-36">
         <div className="mb-6 flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-mark-white.png" alt="" className="h-6 w-auto opacity-85" />
+          <img src="/logo-mark-white.svg" alt="" className="h-6 w-auto opacity-85" />
           <p className="label text-cream/55">Gallery</p>
         </div>
 

@@ -69,7 +69,7 @@ export default function Preloader() {
       </div>
       <div className="pl-brand relative z-10 flex flex-col items-center">
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src="/logo-cut.png" alt="The Pincio" className="h-28 w-auto opacity-90 drop-shadow-[0_8px_30px_rgba(0,0,0,0.5)]" />
+        <img src="/logo-white.svg" alt="The Pincio" className="h-28 w-auto opacity-90 drop-shadow-[0_8px_30px_rgba(0,0,0,0.5)]" />
         <div className="mt-6 flex items-baseline gap-2 font-display text-white/80">
           <span className="text-5xl tabular-nums">{n}</span>
           <span className="text-lg text-white/40">/ 100</span>

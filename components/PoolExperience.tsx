@@ -33,7 +33,7 @@ export default function PoolExperience() {
         <Reveal>
           <div data-reveal-child className="mb-6 flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-mark-white.png" alt="" className="h-6 w-auto opacity-85" />
+            <img src="/logo-mark-white.svg" alt="" className="h-6 w-auto opacity-85" />
             <p className="label text-white/80">Pool Experience</p>
           </div>
         </Reveal>

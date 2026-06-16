@@ -17,7 +17,7 @@ export default function FoodExperience() {
       <div className="container-edge relative z-10 py-28 sm:py-36">
         <div className="mb-6 flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-mark.png" alt="" className="h-6 w-auto opacity-80" />
+          <img src="/logo-mark.svg" alt="" className="h-6 w-auto opacity-80" />
           <p className="label text-terracotta">Bites</p>
         </div>
 

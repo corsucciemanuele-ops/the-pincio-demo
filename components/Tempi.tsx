@@ -102,7 +102,7 @@ export default function Tempi() {
       <div className="container-edge pt-28 pb-10 sm:pt-36">
         <div className="mb-6 flex items-center gap-3">
           {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img src="/logo-mark.png" alt="" className="h-6 w-auto opacity-80" />
+          <img src="/logo-mark.svg" alt="" className="h-6 w-auto opacity-80" />
           <p className="label text-stone">La giornata, in tre tempi</p>
         </div>
         <HeadingReveal

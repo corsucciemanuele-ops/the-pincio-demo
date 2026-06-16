@@ -55,7 +55,7 @@ export default function Header() {
         >
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="/logo-mark.png"
+            src="/logo-mark.svg"
             alt=""
             className={`h-9 w-auto transition-[filter] duration-500 ${
               scrolled ? "" : "drop-shadow-[0_1px_8px_rgba(20,14,8,0.45)]"

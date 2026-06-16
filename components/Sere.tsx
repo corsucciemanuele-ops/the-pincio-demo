@@ -43,7 +43,7 @@ export default function Sere() {
         <div className="lg:col-span-5">
           <div className="mb-6 flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-mark-white.png" alt="" className="h-6 w-auto opacity-85" />
+            <img src="/logo-mark-white.svg" alt="" className="h-6 w-auto opacity-85" />
             <p className="label text-cream/60">Le sere del Pincio</p>
           </div>
           <HeadingReveal

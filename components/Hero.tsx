@@ -62,7 +62,7 @@ export default function Hero() {
         <img
           ref={logo}
           data-hero-in
-          src="/logo-white.png"
+          src="/logo-white.svg"
           alt="The Pincio — Pool Bites Bar"
           className="w-[min(78vw,520px)] drop-shadow-[0_10px_50px_rgba(6,12,22,0.65)]"
         />
