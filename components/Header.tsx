@@ -5,8 +5,9 @@ import { gsap } from "@/lib/gsap";
 
 const NAV = [
   { label: "La giornata", href: "#giornata" },
+  { label: "Pool", href: "#pool" },
   { label: "Gallery", href: "#gallery" },
-  { label: "Le sere", href: "#sere" },
+  { label: "Sunset", href: "#sunset" },
   { label: "Dove siamo", href: "#dove" },
 ];
 

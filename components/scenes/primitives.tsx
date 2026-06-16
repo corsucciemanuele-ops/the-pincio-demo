@@ -1,5 +1,7 @@
 "use client";
 
+import { useId } from "react";
+
 /**
  * SVG environment primitives — the building blocks of every scene.
  * Soft silhouettes, not clipart: meant to be blurred, hazed and layered so
@@ -175,6 +177,7 @@ export function Festoon({
   glow?: string;
   className?: string;
 }) {
+  const bid = `bulb-${useId().replace(/:/g, "")}`;
   const strands = [
     { y: 70, sag: 60 },
     { y: 110, sag: 90 },
@@ -183,7 +186,7 @@ export function Festoon({
   return (
     <svg viewBox="0 0 1440 400" className={`h-full w-full ${className}`} aria-hidden>
       <defs>
-        <radialGradient id="bulb" cx="50%" cy="50%" r="50%">
+        <radialGradient id={bid} cx="50%" cy="50%" r="50%">
           <stop offset="0%" stopColor={glow} stopOpacity="1" />
           <stop offset="100%" stopColor={glow} stopOpacity="0" />
         </radialGradient>
@@ -197,7 +200,7 @@ export function Festoon({
           const y = s.y + s.sag * (1 - Math.pow(2 * t - 1, 2));
           return (
             <g key={i}>
-              <circle cx={x} cy={y} r="13" fill="url(#bulb)" opacity="0.9" />
+              <circle cx={x} cy={y} r="13" fill={`url(#${bid})`} opacity="0.9" />
               <circle cx={x} cy={y} r="2.4" fill={glow} />
             </g>
           );
@@ -223,6 +226,9 @@ export function PoolSurface({
   tint?: string;
   highlight?: string;
 }) {
+  const uid = useId().replace(/:/g, "");
+  const gid = `pg-${uid}`;
+  const fid = `rf-${uid}`;
   return (
     <svg
       viewBox="0 0 1000 500"
@@ -231,17 +237,17 @@ export function PoolSurface({
       aria-hidden
     >
       <defs>
-        <linearGradient id="pool" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={tint} stopOpacity="0.55" />
           <stop offset="100%" stopColor={tint} stopOpacity="0.95" />
         </linearGradient>
-        <filter id="ripple">
+        <filter id={fid}>
           <feTurbulence type="fractalNoise" baseFrequency="0.012 0.04" numOctaves="2" seed="4" />
           <feDisplacementMap in="SourceGraphic" scale="18" />
         </filter>
       </defs>
-      <rect width="1000" height="500" fill="url(#pool)" />
-      <g filter="url(#ripple)" opacity="0.6">
+      <rect width="1000" height="500" fill={`url(#${gid})`} />
+      <g filter={`url(#${fid})`} opacity="0.6">
         {Array.from({ length: 9 }).map((_, i) => (
           <rect
             key={i}
@@ -306,20 +312,94 @@ export function Lake({
   top?: string;
   bottom?: string;
 }) {
+  const lid = `lake-${useId().replace(/:/g, "")}`;
   return (
     <svg viewBox="0 0 1000 240" preserveAspectRatio="none" className={`h-full w-full ${className}`} aria-hidden>
       <defs>
-        <linearGradient id="lake" x1="0" y1="0" x2="0" y2="1">
+        <linearGradient id={lid} x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stopColor={top} />
           <stop offset="100%" stopColor={bottom} />
         </linearGradient>
       </defs>
-      <rect width="1000" height="240" fill="url(#lake)" />
+      <rect width="1000" height="240" fill={`url(#${lid})`} />
       <g stroke="rgba(255,255,255,0.35)" strokeWidth="2">
         {[40, 80, 120, 165, 205].map((y, i) => (
           <line key={i} x1="120" y1={y} x2="880" y2={y} opacity={0.5 - i * 0.07} />
         ))}
       </g>
+    </svg>
+  );
+}
+
+/** A Mediterranean palm silhouette. */
+export function Palm({
+  color = "#1E2A22",
+  className = "",
+  flip = false,
+}: {
+  color?: string;
+  className?: string;
+  flip?: boolean;
+}) {
+  return (
+    <svg
+      viewBox="0 0 260 360"
+      className={`h-full w-full ${className}`}
+      style={{ transform: flip ? "scaleX(-1)" : undefined }}
+      preserveAspectRatio="xMidYMax meet"
+      aria-hidden
+    >
+      <g fill={color}>
+        {/* trunk */}
+        <path d="M126 360 C 120 270 118 200 124 120 L136 120 C 140 200 138 280 134 360 Z" />
+        {/* fronds */}
+        {[-78, -40, 0, 42, 80].map((a, i) => (
+          <g key={i} transform={`translate(130 120) rotate(${a})`}>
+            <path d="M0 0 C 30 -16 78 -22 128 -14 C 86 -2 40 8 0 6 Z" opacity="0.96" />
+          </g>
+        ))}
+        <circle cx="130" cy="120" r="7" />
+      </g>
+    </svg>
+  );
+}
+
+/** Sun loungers, a parasol and a couple of distant figures by the pool. */
+export function Loungers({
+  color = "#FFFFFF",
+  shade = "rgba(0,0,0,0.18)",
+  className = "",
+}: {
+  color?: string;
+  shade?: string;
+  className?: string;
+}) {
+  return (
+    <svg viewBox="0 0 1000 240" preserveAspectRatio="xMidYMax slice" className={`h-full w-full ${className}`} aria-hidden>
+      {/* parasol */}
+      <g>
+        <path d="M150 120 C 120 86 250 86 220 120 Z" fill={color} />
+        <rect x="183" y="118" width="4" height="84" fill={color} />
+      </g>
+      {/* two loungers */}
+      {[120, 300].map((x, i) => (
+        <g key={i} transform={`translate(${x} 150)`}>
+          <rect x="0" y="40" width="150" height="10" rx="5" fill={color} />
+          <rect x="0" y="18" width="60" height="10" rx="5" transform="rotate(-24)" fill={color} />
+          <rect x="6" y="50" width="6" height="22" fill={shade} />
+          <rect x="138" y="50" width="6" height="22" fill={shade} />
+        </g>
+      ))}
+      {/* distant figures (people) */}
+      {[640, 690, 820].map((x, i) => {
+        const h = 70 - (i % 2) * 8;
+        return (
+          <g key={i} transform={`translate(${x} ${200 - h})`} fill={color}>
+            <circle cx="0" cy="0" r="9" />
+            <path d={`M-10 ${h} C -10 22 -6 14 0 14 C 6 14 10 22 10 ${h} Z`} />
+          </g>
+        );
+      })}
     </svg>
   );
 }

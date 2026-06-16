@@ -91,7 +91,7 @@ export default function Gallery() {
         {PANELS.map((p, i) => (
           <figure
             key={i}
-            className="relative h-[80vh] w-[70vw] shrink-0 overflow-hidden rounded-[3px] shadow-[0_50px_90px_-50px_rgba(0,0,0,0.8)] ring-1 ring-white/10 sm:w-[42vw] lg:w-[27vw]"
+            className="relative h-[86vh] w-[90vw] shrink-0 overflow-hidden rounded-[4px] shadow-[0_60px_110px_-50px_rgba(0,0,0,0.85)] ring-1 ring-white/10 sm:w-[72vw] lg:w-[56vw]"
           >
             <div data-panel-img className="absolute inset-0 will-change-transform">
               <GalleryFrame kind={p.kind} />
