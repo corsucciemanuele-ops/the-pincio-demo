@@ -25,11 +25,11 @@ export const MEDIA: Record<string, MediaEntry> = {
   // 📷 location — landscape 4:3 (photo, or swap to a clip later)
   "location": { type: "image", src: "/media/location.jpg" },
 
-  // 📷 gallery — vertical 4:5
+  // 📷 gallery — vertical 4:5 (sere is a real sunset clip)
   "gallery-luce": { type: "image", src: "/media/gallery-luce.jpg" },
   "gallery-acqua": { type: "image", src: "/media/gallery-acqua.jpg" },
   "gallery-tavola": { type: "image", src: "/media/gallery-tavola.jpg" },
-  "gallery-sere": { type: "image", src: "/media/gallery-sere.jpg" },
+  "gallery-sere": { type: "video", src: "/media/gallery-sere.mp4", poster: "/media/gallery-sere.jpg" },
 
   // 📷 food — vertical 3:4
   "food-1": { type: "image", src: "/media/food-1.jpg" },
