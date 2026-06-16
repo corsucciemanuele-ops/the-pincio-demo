@@ -6,6 +6,7 @@ import FieldScene from "./FieldScene";
 export default function BitesScene() {
   return (
     <FieldScene
+      slot="tempi-bites"
       poster={
         "radial-gradient(80% 60% at 70% 16%, rgba(255,238,196,0.85), transparent 58%)," +
         "linear-gradient(to bottom, #F0E4C4 0%, #E6C896 42%, #CBA06A 74%, #9A6E44 100%)"

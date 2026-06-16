@@ -31,7 +31,11 @@ export default function PoolExperience() {
 
       <div className="container-edge relative z-10">
         <Reveal>
-          <p data-reveal-child className="label mb-6 text-white/80">Pool Experience</p>
+          <div data-reveal-child className="mb-6 flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-mark-white.png" alt="" className="h-6 w-auto opacity-85" />
+            <p className="label text-white/80">Pool Experience</p>
+          </div>
         </Reveal>
         <HeadingReveal
           className="max-w-2xl font-display text-[clamp(2.4rem,6vw,5rem)] font-light leading-[0.98] text-white drop-shadow-[0_2px_18px_rgba(6,40,46,0.5)]"

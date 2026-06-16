@@ -6,6 +6,7 @@ import FieldScene from "./FieldScene";
 export default function BarScene() {
   return (
     <FieldScene
+      slot="tempi-bar"
       poster={
         "radial-gradient(50% 34% at 58% 50%, rgba(255,236,196,0.9), transparent 60%)," +
         "linear-gradient(to bottom, #6E4A86 0%, #C16A86 28%, #ED7E6A 50%, #E79A66 64%, #3A2F4A 100%)"

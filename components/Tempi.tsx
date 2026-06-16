@@ -100,7 +100,11 @@ export default function Tempi() {
     <section id="giornata" ref={root} className="relative bg-cream">
       {/* Intro */}
       <div className="container-edge pt-28 pb-10 sm:pt-36">
-        <p className="label mb-6 text-stone">La giornata, in tre tempi</p>
+        <div className="mb-6 flex items-center gap-3">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img src="/logo-mark.png" alt="" className="h-6 w-auto opacity-80" />
+          <p className="label text-stone">La giornata, in tre tempi</p>
+        </div>
         <HeadingReveal
           className="max-w-3xl font-display text-[clamp(2.2rem,5vw,4.2rem)] font-light leading-[1.04] text-ink"
           lines={["Dove la giornata", <em key="i" className="italic text-sage">rallenta.</em>]}

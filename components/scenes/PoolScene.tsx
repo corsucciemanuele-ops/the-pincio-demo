@@ -6,6 +6,7 @@ import FieldScene from "./FieldScene";
 export default function PoolScene() {
   return (
     <FieldScene
+      slot="tempi-pool"
       poster={
         "radial-gradient(90% 60% at 30% 18%, rgba(255,248,225,0.7), transparent 60%)," +
         "linear-gradient(to bottom, #EDEAD9 0%, #CFE0DA 40%, #8FC2C4 72%, #4E9AA4 100%)"

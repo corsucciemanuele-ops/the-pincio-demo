@@ -6,6 +6,7 @@ import FieldScene from "./FieldScene";
 export default function EventsScene() {
   return (
     <FieldScene
+      slot="sere"
       poster={
         "radial-gradient(70% 40% at 52% 78%, rgba(226,138,92,0.55), transparent 60%)," +
         "linear-gradient(to bottom, #0C1130 0%, #1E2348 34%, #3E2F4A 60%, #6E4444 82%, #2A1A24 100%)"

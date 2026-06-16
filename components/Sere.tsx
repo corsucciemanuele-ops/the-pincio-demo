@@ -40,7 +40,11 @@ export default function Sere() {
       <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#10121a]/85 via-[#10121a]/45 to-transparent" />
       <div className="container-edge relative z-10 grid grid-cols-1 gap-14 py-28 sm:py-36 lg:grid-cols-12">
         <div className="lg:col-span-5">
-          <p className="label mb-6 text-cream/50">Le sere del Pincio</p>
+          <div className="mb-6 flex items-center gap-3">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-mark-white.png" alt="" className="h-6 w-auto opacity-85" />
+            <p className="label text-cream/60">Le sere del Pincio</p>
+          </div>
           <HeadingReveal
             className="font-display text-[clamp(2rem,4.4vw,3.6rem)] font-light leading-[1.05] text-cream"
             lines={[
