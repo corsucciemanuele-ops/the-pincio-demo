@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gsap, prefersReducedMotion } from "@/lib/gsap";
 import { getMedia } from "@/lib/media";
 
@@ -32,7 +32,10 @@ export default function MediaSlot({
 }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const inner = useRef<HTMLDivElement>(null);
-  const media = getMedia(slot);
+  const entry = getMedia(slot);
+  // Hide the media (show placeholder) if the file can't load yet.
+  const [failed, setFailed] = useState(false);
+  const media = failed ? null : entry;
 
   useEffect(() => {
     const el = inner.current;
@@ -68,13 +71,19 @@ export default function MediaSlot({
             loop
             playsInline
             poster={media.poster}
+            onError={() => setFailed(true)}
           >
-            <source src={media.src} />
+            <source src={media.src} onError={() => setFailed(true)} />
           </video>
         )}
         {media?.type === "image" && (
           // eslint-disable-next-line @next/next/no-img-element
-          <img src={media.src} alt="" className="absolute inset-0 h-full w-full object-cover" />
+          <img
+            src={media.src}
+            alt=""
+            className="absolute inset-0 h-full w-full object-cover"
+            onError={() => setFailed(true)}
+          />
         )}
         {overlay && <div className="absolute inset-0" style={{ background: overlay }} />}
       </div>
