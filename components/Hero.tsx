@@ -3,7 +3,6 @@
 import { useEffect, useRef } from "react";
 import { gsap, EASE, prefersReducedMotion } from "@/lib/gsap";
 import HeroScene from "./scenes/HeroScene";
-import MagneticButton from "./MagneticButton";
 
 export default function Hero() {
   const root = useRef<HTMLDivElement>(null);
@@ -70,19 +69,11 @@ export default function Hero() {
         <p data-hero-in className="mt-6 font-display text-[clamp(1.6rem,4vw,3rem)] font-light italic leading-tight text-cream drop-shadow-[0_2px_16px_rgba(8,16,24,0.6)]">
           L&apos;estate ha un indirizzo.
         </p>
-        <div data-hero-in className="mt-9">
-          <MagneticButton
-            href="#invito"
-            className="label rounded-full border border-white/20 bg-ink/70 px-8 py-4 text-cream shadow-[0_10px_30px_-8px_rgba(8,12,20,0.6)] backdrop-blur-sm transition-colors duration-500 hover:bg-pool-deep"
-          >
-            Ricevi l&apos;invito
-          </MagneticButton>
-        </div>
       </div>
 
       {/* bottom meta */}
       <p data-hero-in className="absolute bottom-8 left-1/2 z-10 -translate-x-1/2 label text-center text-cream/75 drop-shadow-[0_1px_10px_rgba(8,16,24,0.6)]">
-        Pool • Bites • Bar — Vista Lago di Mercatale
+        Pool · Bites · Bar — Sul colle, a bordo piscina
       </p>
     </section>
   );

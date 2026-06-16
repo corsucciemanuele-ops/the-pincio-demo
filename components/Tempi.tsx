@@ -20,22 +20,22 @@ const ACTS: Act[] = [
   {
     n: "01",
     tag: "Pool",
-    title: "Dove la giornata rallenta.",
-    body: "Acqua calma. Lago all'orizzonte. Nessuna fretta.",
+    title: "Dentro l'acqua, senza fretta.",
+    body: "Acqua calma, sole, nessun orologio.",
     Scene: PoolScene,
   },
   {
     n: "02",
     tag: "Bites",
-    title: "La tavola segue il sole.",
-    body: "La mano del Nido del Corvo, più leggera, più libera.",
+    title: "La tavola, più leggera.",
+    body: "La mano del Nido del Corvo, in versione bordo piscina.",
     Scene: BitesScene,
   },
   {
     n: "03",
     tag: "Bar",
-    title: "Il tramonto è un rito.",
-    body: "Quando il lago si accende, il colle cambia ritmo. Un calice, la luce che cala, niente fretta.",
+    title: "Le sere hanno un rito.",
+    body: "Quando il sole cala sull'acqua, il colle cambia ritmo. Un calice, niente fretta.",
     Scene: BarScene,
   },
 ];

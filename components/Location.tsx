@@ -15,11 +15,12 @@ export default function Location() {
           <p className="label mb-8 text-stone">Dove siamo</p>
           <HeadingReveal
             className="max-w-md font-display text-[clamp(1.8rem,3.6vw,3rem)] font-light leading-[1.1] text-ink"
-            lines={["Una terrazza naturale", "sul Lago di Mercatale."]}
+            lines={["A bordo piscina,", "sul colle del Nido del Corvo."]}
           />
           <Reveal className="mt-8">
             <p data-reveal-child className="max-w-sm leading-relaxed text-stone">
-              Sullo stesso colle del Ristorante Sul Colle — Nido del Corvo.
+              Sopra il Lago di Mercatale, nel Montefeltro. La stessa collina del
+              Ristorante Sul Colle — Nido del Corvo.
             </p>
             <div data-reveal-child className="mt-10">
               <p className="label text-stone">Via Colle Igea 22/B — Sassocorvaro Auditore (PU)</p>

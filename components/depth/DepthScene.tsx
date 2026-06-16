@@ -28,56 +28,10 @@ export default function DepthScene({
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (prefersReducedMotion()) {
-      el.style.setProperty("--mx", "0");
-      el.style.setProperty("--my", "0");
-      return;
-    }
-
-    let tx = 0,
-      ty = 0,
-      cx = 0,
-      cy = 0,
-      raf = 0,
-      inView = true;
-
-    const onMove = (e: MouseEvent) => {
-      const r = el.getBoundingClientRect();
-      // Normalise around the element centre, clamp to -1..1.
-      tx = Math.max(-1, Math.min(1, (e.clientX - (r.left + r.width / 2)) / (r.width / 2)));
-      ty = Math.max(-1, Math.min(1, (e.clientY - (r.top + r.height / 2)) / (r.height / 2)));
-    };
-
-    const tick = () => {
-      cx += (tx * intensity - cx) * 0.06;
-      cy += (ty * intensity - cy) * 0.06;
-      el.style.setProperty("--mx", cx.toFixed(4));
-      el.style.setProperty("--my", cy.toFixed(4));
-      raf = requestAnimationFrame(tick);
-    };
-
-    // Only run the loop while the scene is on screen.
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        inView = entry.isIntersecting;
-        if (inView && !raf) raf = requestAnimationFrame(tick);
-        if (!inView && raf) {
-          cancelAnimationFrame(raf);
-          raf = 0;
-        }
-      },
-      { threshold: 0 }
-    );
-    io.observe(el);
-
-    window.addEventListener("mousemove", onMove, { passive: true });
-    raf = requestAnimationFrame(tick);
-
-    return () => {
-      window.removeEventListener("mousemove", onMove);
-      io.disconnect();
-      if (raf) cancelAnimationFrame(raf);
-    };
+    // v2: no mouse-driven parallax (desktop-only, doesn't exist on touch).
+    // Depth now comes purely from scroll (Layer) — works everywhere.
+    el.style.setProperty("--mx", "0");
+    el.style.setProperty("--my", "0");
   }, [intensity]);
 
   return (

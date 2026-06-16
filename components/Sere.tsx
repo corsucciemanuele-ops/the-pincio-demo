@@ -4,10 +4,11 @@ import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
 import HeadingReveal from "./HeadingReveal";
 import EventsScene from "./scenes/EventsScene";
+import { SERATE } from "@/lib/events";
 
 const EVENTS = [
   { name: "Sunset aperitivo", note: "Ogni sera d'estate" },
-  { name: "Cene sotto le stelle", note: "Su prenotazione" },
+  { name: "Cene a bordo piscina", note: "Su prenotazione" },
   { name: "Eventi privati", note: "Il colle, solo per voi" },
 ];
 
@@ -55,8 +56,8 @@ export default function Sere() {
             ]}
           />
           <p className="mt-8 max-w-md leading-relaxed text-cream/70">
-            Aperitivi al tramonto, cene sotto le stelle, musica dal vivo ed
-            eventi privati. Sempre con il lago dentro la scena.
+            Aperitivi, cene a bordo piscina, musica ed eventi privati. Sempre
+            con l&apos;acqua dentro la scena.
           </p>
         </div>
 
@@ -65,16 +66,30 @@ export default function Sere() {
             <div
               key={i}
               data-row
-              className="group flex items-baseline justify-between border-b border-cream/15 py-8 transition-colors duration-500 hover:border-cream/40"
+              className="flex items-baseline justify-between border-b border-cream/15 py-8"
             >
-              <span className="font-display text-2xl text-cream sm:text-3xl">
-                {e.name}
-              </span>
-              <span className="label text-cream/50 transition-colors duration-500 group-hover:text-gold-soft">
-                {e.note}
-              </span>
+              <span className="font-display text-2xl text-cream sm:text-3xl">{e.name}</span>
+              <span className="label text-cream/50">{e.note}</span>
             </div>
           ))}
+
+          {/* Prossime serate — content-managed, empty until real dates exist */}
+          <div className="pt-10">
+            <p className="label mb-4 text-cream/40">Prossime serate</p>
+            {SERATE.length === 0 ? (
+              <p className="font-display text-xl italic text-cream/45">
+                Il calendario delle serate sarà annunciato. Lascia il contatto
+                per saperlo per primo.
+              </p>
+            ) : (
+              SERATE.map((s, i) => (
+                <div key={i} className="flex items-baseline justify-between border-b border-cream/10 py-5">
+                  <span className="font-display text-xl text-cream">{s.title}</span>
+                  <span className="label text-cream/50">{s.date}</span>
+                </div>
+              ))
+            )}
+          </div>
         </div>
       </div>
     </section>

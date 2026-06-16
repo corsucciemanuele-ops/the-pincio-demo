@@ -1,6 +1,7 @@
 import Preloader from "@/components/Preloader";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
+import NostalgiaBand from "@/components/NostalgiaBand";
 import Marquee from "@/components/Marquee";
 import Tempi from "@/components/Tempi";
 import PoolExperience from "@/components/PoolExperience";
@@ -21,6 +22,7 @@ export default function Home() {
       <Header />
       <main>
         <Hero />
+        <NostalgiaBand />
         <Marquee />
         <Tempi />
         <PoolExperience />

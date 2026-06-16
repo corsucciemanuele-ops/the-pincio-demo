@@ -43,13 +43,14 @@ export default function PoolExperience() {
         />
         <Reveal className="mt-10 flex flex-wrap gap-3">
           {FEATURES.map((f) => (
-            <span
+            <button
               key={f}
+              type="button"
               data-reveal-child
-              className="label rounded-full border border-white/30 bg-white/10 px-5 py-2.5 text-white backdrop-blur-md"
+              className="label select-none rounded-full border border-white/30 bg-white/10 px-5 py-2.5 text-white backdrop-blur-md transition-transform duration-150 ease-out active:translate-y-0.5 active:scale-95 active:bg-white/20"
             >
               {f}
-            </span>
+            </button>
           ))}
         </Reveal>
       </div>

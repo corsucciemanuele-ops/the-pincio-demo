@@ -1,31 +1,19 @@
 "use client";
 
-import HeadingReveal from "./HeadingReveal";
-
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden bg-ink text-cream">
-      <div className="container-edge py-28 sm:py-40">
-        <HeadingReveal
-          className="max-w-4xl font-display text-[clamp(2rem,5.5vw,4.6rem)] font-light leading-[1.04] text-cream"
-          lines={[
-            "Tutti sanno cosa è stato.",
-            <em key="i" className="italic text-gold-soft">
-              Presto saprete cosa diventerà.
-            </em>,
-          ]}
-        />
-
-        <div className="mt-24 grid grid-cols-1 gap-10 border-t border-cream/15 pt-12 sm:grid-cols-3">
+      <div className="container-edge py-20 sm:py-28">
+        <div className="grid grid-cols-1 gap-10 border-t border-cream/15 pt-12 sm:grid-cols-3">
           <div className="flex items-center gap-4">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-mark.png" alt="" className="h-11 w-auto opacity-90" />
             <span className="font-display text-2xl text-cream">The Pincio</span>
           </div>
           <div className="space-y-2">
-            <p className="label text-cream/45">The Pincio · Pool • Bites • Bar</p>
+            <p className="label text-cream/45">The Pincio · Pool · Bites · Bar</p>
             <p className="label text-cream/45">
-              Estate 2027 · Vista Lago di Mercatale
+              Estate 2027 · Sul colle, a bordo piscina
             </p>
           </div>
           <div className="space-y-2 sm:text-right">

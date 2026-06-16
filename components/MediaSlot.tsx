@@ -32,10 +32,23 @@ export default function MediaSlot({
 }: Props) {
   const root = useRef<HTMLDivElement>(null);
   const inner = useRef<HTMLDivElement>(null);
+  const video = useRef<HTMLVideoElement>(null);
   const entry = getMedia(slot);
   // Hide the media (show placeholder) if the file can't load yet.
   const [failed, setFailed] = useState(false);
   const media = failed ? null : entry;
+
+  // iOS/Safari: guarantee muted-inline autoplay (otherwise a play button shows).
+  useEffect(() => {
+    const v = video.current;
+    if (!v) return;
+    v.muted = true;
+    v.defaultMuted = true;
+    const tryPlay = () => v.play().catch(() => {});
+    tryPlay();
+    v.addEventListener("canplay", tryPlay, { once: true });
+    return () => v.removeEventListener("canplay", tryPlay);
+  }, [media?.src]);
 
   useEffect(() => {
     const el = inner.current;
@@ -65,11 +78,13 @@ export default function MediaSlot({
         <div className="absolute inset-0" style={{ background: poster }} />
         {media?.type === "video" && (
           <video
+            ref={video}
             className="absolute inset-0 h-full w-full object-cover"
             autoPlay
             muted
             loop
             playsInline
+            preload="auto"
             poster={media.poster}
             onError={() => setFailed(true)}
           >
