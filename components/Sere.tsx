@@ -3,6 +3,7 @@
 import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
 import HeadingReveal from "./HeadingReveal";
+import EventsScene from "./scenes/EventsScene";
 
 const EVENTS = [
   { name: "Sunset aperitivo", note: "Ogni sera d'estate" },
@@ -33,9 +34,11 @@ export default function Sere() {
   }, []);
 
   return (
-    <section id="sere" ref={root} className="relative bg-sage-deep text-cream">
-      <div className="grain absolute inset-0 opacity-100" />
-      <div className="container-edge relative grid grid-cols-1 gap-14 py-28 sm:py-36 lg:grid-cols-12">
+    <section id="sere" ref={root} className="relative overflow-hidden bg-[#15171F] text-cream">
+      {/* Night terrace environment */}
+      <EventsScene />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#10121a]/85 via-[#10121a]/45 to-transparent" />
+      <div className="container-edge relative z-10 grid grid-cols-1 gap-14 py-28 sm:py-36 lg:grid-cols-12">
         <div className="lg:col-span-5">
           <p className="label mb-6 text-cream/50">Le sere del Pincio</p>
           <HeadingReveal

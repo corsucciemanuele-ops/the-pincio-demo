@@ -2,6 +2,7 @@
 
 import HeadingReveal from "./HeadingReveal";
 import Reveal from "./Reveal";
+import LocationScene from "./scenes/LocationScene";
 
 const MAPS_URL =
   "https://www.google.com/maps/search/?api=1&query=Sassocorvaro+Auditore+Lago+di+Mercatale";
@@ -41,52 +42,23 @@ export default function Location() {
           </Reveal>
         </div>
 
-        {/* Stylised map plate */}
+        {/* Montefeltro landscape — the colle over the lake */}
         <Reveal className="relative">
           <a
             data-reveal-child
             href={MAPS_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="grain group relative block aspect-[4/3] w-full overflow-hidden rounded-[2px]"
-            style={{
-              background:
-                "linear-gradient(160deg, #DFE5DB 0%, #C3D0C6 50%, #9FB1A3 100%)",
-            }}
+            className="group relative block aspect-[4/3] w-full overflow-hidden rounded-[3px] shadow-[0_40px_80px_-44px_rgba(40,30,20,0.55)] ring-1 ring-black/5"
           >
-            {/* Lake shape */}
-            <svg
-              viewBox="0 0 400 300"
-              className="absolute inset-0 h-full w-full"
-              preserveAspectRatio="xMidYMid slice"
-            >
-              <path
-                d="M40 180 C 90 130 140 150 190 150 C 250 150 300 120 360 160 C 380 200 320 240 250 235 C 170 228 90 250 50 220 Z"
-                fill="#7E988A"
-                opacity="0.55"
-              />
-              <path
-                d="M0 90 C 80 70 140 110 220 90 C 300 70 360 100 400 80"
-                fill="none"
-                stroke="#4E5A50"
-                strokeWidth="1"
-                opacity="0.4"
-              />
-              <g>
-                <circle cx="250" cy="150" r="6" fill="#A98E5F" />
-                <circle
-                  cx="250"
-                  cy="150"
-                  r="14"
-                  fill="none"
-                  stroke="#A98E5F"
-                  strokeWidth="1"
-                  className="origin-center transition-transform duration-700 group-hover:scale-150"
-                  style={{ transformBox: "fill-box" }}
-                />
-              </g>
-            </svg>
-            <span className="label absolute bottom-6 left-6 text-ink/70">
+            <LocationScene />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent" />
+            {/* location pin */}
+            <span className="absolute left-[58%] top-[58%] z-10 flex h-3 w-3 -translate-x-1/2 -translate-y-1/2">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-gold-soft/60" />
+              <span className="relative inline-flex h-3 w-3 rounded-full bg-gold shadow" />
+            </span>
+            <span className="label absolute bottom-6 left-6 z-10 text-cream/85 drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
               The Pincio · Il Colle
             </span>
           </a>

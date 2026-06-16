@@ -2,34 +2,19 @@
 
 import { useEffect, useRef } from "react";
 import { gsap, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
+import GalleryFrame, { FrameKind } from "./scenes/GalleryFrame";
 
 type Panel = {
   title: string;
   time: string;
-  bg: string;
+  kind: FrameKind;
 };
 
 const PANELS: Panel[] = [
-  {
-    title: "Luce.",
-    time: "Mattino",
-    bg: "linear-gradient(150deg, #F4EEE0 0%, #E6E2D0 55%, #C9D0C4 100%)",
-  },
-  {
-    title: "Acqua.",
-    time: "Mezzogiorno",
-    bg: "linear-gradient(150deg, #DCE4DD 0%, #AEC0B5 55%, #7E988A 100%)",
-  },
-  {
-    title: "Tavola.",
-    time: "Pomeriggio",
-    bg: "linear-gradient(150deg, #F0E3C8 0%, #DCC094 55%, #B89968 100%)",
-  },
-  {
-    title: "Le sere del Pincio.",
-    time: "Tramonto",
-    bg: "linear-gradient(150deg, #E7B98F 0%, #C5806A 50%, #6E5560 100%)",
-  },
+  { title: "Luce.", time: "Mattino", kind: "luce" },
+  { title: "Acqua.", time: "Mezzogiorno", kind: "acqua" },
+  { title: "Tavola.", time: "Pomeriggio", kind: "tavola" },
+  { title: "Le sere del Pincio.", time: "Tramonto", kind: "sere" },
 ];
 
 export default function Gallery() {
@@ -101,32 +86,30 @@ export default function Gallery() {
 
       <div
         ref={track}
-        className="flex h-screen w-max items-end gap-6 px-6 pb-[7vh] will-change-transform sm:gap-8 sm:px-10"
+        className="flex h-screen w-max items-end gap-6 px-6 pb-[6vh] will-change-transform sm:gap-8 sm:px-10"
       >
         {PANELS.map((p, i) => (
           <figure
             key={i}
-            className="grain relative h-[62vh] w-[78vw] shrink-0 overflow-hidden rounded-[2px] sm:w-[46vw] lg:w-[34vw]"
+            className="relative h-[80vh] w-[70vw] shrink-0 overflow-hidden rounded-[3px] shadow-[0_50px_90px_-50px_rgba(0,0,0,0.8)] ring-1 ring-white/10 sm:w-[42vw] lg:w-[27vw]"
           >
-            <div
-              data-panel-img
-              className="absolute inset-0 will-change-transform"
-              style={{ background: p.bg }}
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/35 via-transparent to-transparent" />
-            <figcaption className="absolute bottom-7 left-7">
-              <p className="font-display text-3xl text-cream sm:text-4xl">
+            <div data-panel-img className="absolute inset-0 will-change-transform">
+              <GalleryFrame kind={p.kind} />
+            </div>
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/55 via-transparent to-black/15" />
+            <figcaption className="absolute bottom-8 left-8 z-10">
+              <p className="font-display text-3xl text-cream drop-shadow-[0_2px_10px_rgba(0,0,0,0.6)] sm:text-4xl">
                 {p.title}
               </p>
-              <p className="label mt-2 text-cream/60">{p.time}</p>
+              <p className="label mt-2 text-cream/70">{p.time}</p>
             </figcaption>
-            <span className="label absolute right-6 top-6 text-cream/40">
+            <span className="label absolute right-6 top-6 z-10 text-cream/50">
               0{i + 1}
             </span>
           </figure>
         ))}
 
-        {/* Tail spacer so the last panel can fully arrive */}
+        {/* Tail spacer so the last frame can fully arrive */}
         <div className="h-1 w-[6vw] shrink-0" aria-hidden />
       </div>
     </section>

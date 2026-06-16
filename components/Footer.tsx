@@ -1,7 +1,6 @@
 "use client";
 
 import HeadingReveal from "./HeadingReveal";
-import Crystal from "./Crystal";
 
 export default function Footer() {
   return (
@@ -18,8 +17,9 @@ export default function Footer() {
         />
 
         <div className="mt-24 grid grid-cols-1 gap-10 border-t border-cream/15 pt-12 sm:grid-cols-3">
-          <div className="flex items-center gap-3 text-gold-soft">
-            <Crystal className="h-8 w-7" />
+          <div className="flex items-center gap-4">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src="/logo-mark.png" alt="" className="h-11 w-auto opacity-90" />
             <span className="font-display text-2xl text-cream">The Pincio</span>
           </div>
           <div className="space-y-2">

@@ -2,7 +2,6 @@
 
 import { useEffect, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
-import Crystal from "./Crystal";
 
 const NAV = [
   { label: "La giornata", href: "#giornata" },
@@ -51,10 +50,17 @@ export default function Header() {
       <div className="container-edge flex h-20 items-center justify-between">
         <button
           onClick={() => go("#top")}
-          className="flex items-center gap-3 text-gold"
+          className="flex items-center gap-3"
           aria-label="The Pincio — home"
         >
-          <Crystal className="h-7 w-6" />
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="/logo-mark.png"
+            alt=""
+            className={`h-9 w-auto transition-[filter] duration-500 ${
+              scrolled ? "" : "drop-shadow-[0_1px_8px_rgba(20,14,8,0.45)]"
+            }`}
+          />
           <span className="font-display text-xl tracking-wide text-ink">
             The Pincio
           </span>

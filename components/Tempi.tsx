@@ -4,14 +4,16 @@ import { useEffect, useRef, useState } from "react";
 import { gsap, ScrollTrigger, prefersReducedMotion } from "@/lib/gsap";
 import HeadingReveal from "./HeadingReveal";
 import Reveal from "./Reveal";
+import PoolScene from "./scenes/PoolScene";
+import BitesScene from "./scenes/BitesScene";
+import BarScene from "./scenes/BarScene";
 
 type Act = {
   n: string;
   tag: string;
   title: React.ReactNode;
   body: string;
-  scene: string; // background gradient for the sticky visual
-  glow: string;
+  Scene: () => JSX.Element;
 };
 
 const ACTS: Act[] = [
@@ -20,27 +22,21 @@ const ACTS: Act[] = [
     tag: "Pool",
     title: "Dove la giornata rallenta.",
     body: "Acqua calma. Lago all'orizzonte. Nessuna fretta.",
-    scene:
-      "linear-gradient(165deg, #F2ECDD 0%, #DDE0D2 45%, #BFC9C0 72%, #8FA396 100%)",
-    glow: "radial-gradient(60% 50% at 70% 18%, rgba(224,168,110,0.35), transparent 70%)",
+    Scene: PoolScene,
   },
   {
     n: "02",
     tag: "Bites",
     title: "La tavola segue il sole.",
     body: "La mano del Nido del Corvo, più leggera, più libera.",
-    scene:
-      "linear-gradient(165deg, #F4EBD7 0%, #E9D9BD 40%, #D9BE96 74%, #B59A6C 100%)",
-    glow: "radial-gradient(55% 50% at 30% 20%, rgba(224,168,110,0.45), transparent 70%)",
+    Scene: BitesScene,
   },
   {
     n: "03",
     tag: "Bar",
     title: "Il tramonto è un rito.",
     body: "Quando il lago si accende, il colle cambia ritmo. Un calice, la luce che cala, niente fretta.",
-    scene:
-      "linear-gradient(165deg, #E9C9A6 0%, #C58A6A 38%, #8B6A6E 70%, #4E4452 100%)",
-    glow: "radial-gradient(60% 60% at 60% 12%, rgba(255,196,128,0.55), transparent 65%)",
+    Scene: BarScene,
   },
 ];
 
@@ -112,33 +108,32 @@ export default function Tempi() {
       </div>
 
       <div className="relative grid grid-cols-1 lg:grid-cols-2">
-        {/* Sticky visual */}
+        {/* Sticky visual — three real environments, crossfaded */}
         <div className="sticky top-0 hidden h-screen items-center overflow-hidden lg:flex">
-          <div className="grain relative m-10 h-[78vh] w-full overflow-hidden rounded-[2px]">
-            {ACTS.map((a, i) => (
-              <div
-                key={i}
-                ref={(r) => {
-                  scenes.current[i] = r;
-                }}
-                className="absolute inset-0"
-                style={{
-                  background: a.scene,
-                  opacity: i === 0 ? 1 : 0,
-                }}
-              >
+          <div className="relative m-10 h-[78vh] w-full overflow-hidden rounded-[3px] shadow-[0_40px_80px_-40px_rgba(40,30,20,0.55)] ring-1 ring-black/5">
+            {ACTS.map((a, i) => {
+              const Scene = a.Scene;
+              return (
                 <div
+                  key={i}
+                  ref={(r) => {
+                    scenes.current[i] = r;
+                  }}
                   className="absolute inset-0"
-                  style={{ background: a.glow }}
-                />
-                {/* Quiet water band at the foot of the scene */}
-                <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/10 to-transparent" />
-                <div className="absolute bottom-8 left-8">
-                  <p className="label text-white/70">{a.tag}</p>
-                  <p className="font-display text-5xl text-white/90">{a.n}</p>
+                  style={{ opacity: i === 0 ? 1 : 0 }}
+                >
+                  <Scene />
+                  <div className="pointer-events-none absolute bottom-8 left-8 z-10">
+                    <p className="label text-white/75 drop-shadow-[0_1px_6px_rgba(0,0,0,0.5)]">
+                      {a.tag}
+                    </p>
+                    <p className="font-display text-5xl text-white drop-shadow-[0_2px_10px_rgba(0,0,0,0.5)]">
+                      {a.n}
+                    </p>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 
@@ -159,11 +154,8 @@ export default function Tempi() {
                 </span>
 
                 {/* Mobile scene */}
-                <div
-                  className="grain relative mb-8 h-56 w-full overflow-hidden rounded-[2px] lg:hidden"
-                  style={{ background: a.scene }}
-                >
-                  <div className="absolute inset-0" style={{ background: a.glow }} />
+                <div className="relative mb-8 h-64 w-full overflow-hidden rounded-[3px] shadow-[0_24px_50px_-30px_rgba(40,30,20,0.5)] lg:hidden">
+                  <a.Scene />
                 </div>
 
                 <Reveal>
