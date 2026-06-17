@@ -2,14 +2,12 @@ import Preloader from "@/components/Preloader";
 import Header from "@/components/Header";
 import Hero from "@/components/Hero";
 import NostalgiaBand from "@/components/NostalgiaBand";
+import Manifesto from "@/components/Manifesto";
 import Marquee from "@/components/Marquee";
-import Tempi from "@/components/Tempi";
-import PoolExperience from "@/components/PoolExperience";
-import FoodExperience from "@/components/FoodExperience";
-import Gallery from "@/components/Gallery";
 import Sere from "@/components/Sere";
-import Invito from "@/components/Invito";
+import PoolExperience from "@/components/PoolExperience";
 import Location from "@/components/Location";
+import Invito from "@/components/Invito";
 import SunsetFinale from "@/components/SunsetFinale";
 import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
@@ -23,12 +21,10 @@ export default function Home() {
       <main>
         <Hero />
         <NostalgiaBand />
+        <Manifesto />
         <Marquee />
-        <Tempi />
-        <PoolExperience />
-        <FoodExperience />
-        <Gallery />
         <Sere />
+        <PoolExperience />
         <Location />
         <Invito />
         <SunsetFinale />

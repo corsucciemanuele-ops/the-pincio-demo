@@ -4,9 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { gsap } from "@/lib/gsap";
 
 const NAV = [
-  { label: "La giornata", href: "#giornata" },
-  { label: "Pool", href: "#pool" },
   { label: "Le sere", href: "#sere" },
+  { label: "Il luogo", href: "#pool" },
   { label: "Dove siamo", href: "#dove" },
 ];
 

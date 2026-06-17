@@ -1,15 +1,15 @@
 "use client";
 
 const WORDS = [
+  "Montefeltro",
+  "Luce",
   "Piscina",
-  "Bordo acqua",
+  "Verde",
   "Aperitivo",
   "Le sere",
-  "Montefeltro",
   "Sassocorvaro",
   "Il Colle",
   "Nido del Corvo",
-  "Lago di Mercatale",
 ];
 
 /**
