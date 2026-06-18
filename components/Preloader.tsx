@@ -20,36 +20,43 @@ export default function Preloader() {
     lenis()?.stop();
     document.body.style.overflow = "hidden";
 
+    let done = false;
     const finish = () => {
+      if (done) return;
+      done = true;
       lenis()?.start();
       document.body.style.overflow = "";
       el.style.display = "none";
       window.dispatchEvent(new Event("pincio:preloaded"));
     };
 
+    // Safety: never leave the page blocked, whatever happens.
+    const safety = window.setTimeout(finish, 3200);
+
     if (prefersReducedMotion()) {
       setN(100);
       finish();
-      return;
+      return () => window.clearTimeout(safety);
     }
 
     const counter = { v: 0 };
     const tl = gsap.timeline({ onComplete: finish });
     tl.to(counter, {
       v: 100,
-      duration: 1.9,
+      duration: 1.3,
       ease: "power2.inOut",
       onUpdate: () => setN(Math.round(counter.v)),
     })
-      .to(".pl-brand", { autoAlpha: 0, y: -14, duration: 0.5, ease: "power2.in" }, "+=0.15")
+      .to(".pl-brand", { autoAlpha: 0, y: -14, duration: 0.45, ease: "power2.in" }, "+=0.1")
       .to(".pl-panel", {
         yPercent: -100,
-        duration: 1.0,
+        duration: 0.9,
         ease: "expo.inOut",
-        stagger: 0.08,
+        stagger: 0.07,
       }, "-=0.1");
 
     return () => {
+      window.clearTimeout(safety);
       tl.kill();
       document.body.style.overflow = "";
     };

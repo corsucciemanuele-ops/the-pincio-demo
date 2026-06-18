@@ -96,6 +96,8 @@ export default function MediaSlot({
           <img
             src={media.src}
             alt=""
+            loading="lazy"
+            decoding="async"
             className="absolute inset-0 h-full w-full object-cover"
             onError={() => setFailed(true)}
           />

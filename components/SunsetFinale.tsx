@@ -98,7 +98,6 @@ export default function SunsetFinale() {
           80% { opacity: 0.5; }
           100% { transform: translate3d(var(--drift, 0), -78vh, 0); opacity: 0; }
         }
-        @media (prefers-reduced-motion: reduce) { .ember { animation: none; opacity: 0; } }
       `}</style>
     </section>
   );

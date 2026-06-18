@@ -114,11 +114,8 @@ html.lenis body {
   will-change: transform;
 }
 
-@media (prefers-reduced-motion: reduce) {
-  *:not(.marquee-track) {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.001ms !important;
-  }
-}
+/* Note: heavy/scroll-bound motion (parallax, reveals) is guarded per-component
+   in JS via prefersReducedMotion. We intentionally do NOT globally freeze CSS
+   here, so gentle decorative loops (marquee, light sweep, embers) still run on
+   phones that have "Reduce Motion" enabled — they must be visible on mobile. */
 
