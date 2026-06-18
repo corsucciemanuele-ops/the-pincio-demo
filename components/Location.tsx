@@ -35,6 +35,23 @@ export default function Location() {
             >
               Apri in Google Maps ↗
             </a>
+
+            {/* Sinergia col ristorante — cross-link al Nido del Corvo */}
+            <div data-reveal-child className="mt-10 border-t border-ink/10 pt-6">
+              <p className="label mb-2 text-stone">Sul Colle, insieme</p>
+              <p className="max-w-sm text-sm leading-relaxed text-stone">
+                The Pincio è sullo stesso colle del Ristorante Sul Colle — Nido
+                del Corvo: lì vivono la cucina e la vista sul lago.
+              </p>
+              <a
+                href="https://nidodelcorvo.it"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="label mt-3 inline-block border-b border-gold pb-1 text-gold transition-colors duration-300 hover:text-graphite"
+              >
+                Scopri il Nido del Corvo ↗
+              </a>
+            </div>
           </Reveal>
         </div>
 
