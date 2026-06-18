@@ -4,9 +4,11 @@ import FieldScene from "./scenes/FieldScene";
 import HeadingReveal from "./HeadingReveal";
 import Reveal from "./Reveal";
 
-const FEATURES = ["Piscina", "Lettini", "Cocktail", "Sunset"];
-
-/** Pool Experience — turquoise water, dynamic light, ready for real footage. */
+/**
+ * L'esperienza del luogo (ex "Pool Experience").
+ * La piscina è il cuore, raccontata come atmosfera / immersione — non un menu
+ * di servizi. La riga "Bites" vive qui dentro, leggera, nel racconto.
+ */
 export default function PoolExperience() {
   return (
     <section id="pool" className="relative flex min-h-[100svh] items-center overflow-hidden">
@@ -27,31 +29,33 @@ export default function PoolExperience() {
       <div className="pool-sweep pointer-events-none absolute inset-0 mix-blend-screen" />
 
       {/* legibility */}
-      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#06343c]/55 via-[#06343c]/10 to-transparent" />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-r from-[#06343c]/65 via-[#06343c]/15 to-transparent" />
 
       <div className="container-edge relative z-10">
         <Reveal>
           <div data-reveal-child className="mb-6 flex items-center gap-3">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src="/logo-mark-white.svg" alt="" className="h-6 w-auto opacity-85" />
-            <p className="label text-white/80">Pool Experience</p>
+            <p className="label text-white/80">L&apos;esperienza del luogo</p>
           </div>
         </Reveal>
+
         <HeadingReveal
           className="max-w-2xl font-display text-[clamp(2.4rem,6vw,5rem)] font-light leading-[0.98] text-white drop-shadow-[0_2px_18px_rgba(6,40,46,0.5)]"
           lines={["Dentro l'acqua,", <em key="i" className="italic">fino al tramonto.</em>]}
         />
-        <Reveal className="mt-10 flex flex-wrap gap-3">
-          {FEATURES.map((f) => (
-            <button
-              key={f}
-              type="button"
-              data-reveal-child
-              className="label select-none rounded-full border border-white/30 bg-white/10 px-5 py-2.5 text-white backdrop-blur-md transition-transform duration-150 ease-out active:translate-y-0.5 active:scale-95 active:bg-white/20"
-            >
-              {f}
-            </button>
-          ))}
+
+        <Reveal className="mt-8 max-w-md">
+          {/* immersione, non lista di servizi */}
+          <p data-reveal-child className="text-lg leading-relaxed text-white/85 drop-shadow-[0_1px_10px_rgba(6,40,46,0.5)]">
+            La piscina è il centro: acqua, pietra chiara, il verde del colle
+            intorno. Un&apos;oasi disegnata, dove le ore non contano.
+          </p>
+          {/* riga Bites, leggera, dentro il racconto */}
+          <p data-reveal-child className="mt-6 font-display text-xl italic leading-relaxed text-white/90 drop-shadow-[0_1px_10px_rgba(6,40,46,0.5)]">
+            La mano del Nido del Corvo, più libera — aperitivo, bites, cocktail
+            a bordo piscina.
+          </p>
         </Reveal>
       </div>
 
@@ -65,7 +69,6 @@ export default function PoolExperience() {
           0% { background-position: 140% 0; }
           100% { background-position: -60% 0; }
         }
-        @media (prefers-reduced-motion: reduce) { .pool-sweep { animation: none; } }
       `}</style>
     </section>
   );
