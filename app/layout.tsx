@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Cormorant_Garamond, Jost } from "next/font/google";
 import "./globals.css";
 import SmoothScroll from "@/components/SmoothScroll";
+import ServiceWorker from "@/components/ServiceWorker";
 
 const display = Cormorant_Garamond({
   subsets: ["latin"],
@@ -19,13 +20,28 @@ const sans = Jost({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://the-pincio-demo.vercel.app"),
   title: "The Pincio — Pool · Bites · Bar · Estate 2027",
   description:
-    "L'estate ha un indirizzo. The Pincio: pool, bites e bar con vista sul Lago di Mercatale, nel Montefeltro. Apertura estate 2027.",
+    "Sul colle, nel cuore del Montefeltro, The Pincio nasce come destinazione d'estate: piscina, aperitivi e sere a bordo acqua. Apertura estate 2027.",
+  applicationName: "The Pincio",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "The Pincio",
+    statusBarStyle: "default",
+  },
+  icons: {
+    icon: [
+      { url: "/icon-192.png", sizes: "192x192", type: "image/png" },
+      { url: "/icon-512.png", sizes: "512x512", type: "image/png" },
+    ],
+    apple: [{ url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" }],
+  },
   openGraph: {
     title: "The Pincio — L'estate ha un indirizzo",
     description:
-      "Pool · Bites · Bar. Vista Lago di Mercatale, Montefeltro. Apertura estate 2027.",
+      "Pool · Bites · Bar. Sul colle, a bordo piscina, nel Montefeltro. Apertura estate 2027.",
     type: "website",
   },
 };
@@ -44,6 +60,7 @@ export default function RootLayout({
   return (
     <html lang="it" className={`${display.variable} ${sans.variable}`}>
       <body className="bg-cream text-ink antialiased">
+        <ServiceWorker />
         <SmoothScroll>{children}</SmoothScroll>
       </body>
     </html>
