@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { gsap, prefersReducedMotion } from "@/lib/gsap";
+import { gsap } from "@/lib/gsap";
 
 /**
  * Closing brand moment. A quiet dark field, soft embers drifting upward
@@ -24,14 +24,9 @@ export default function SunsetFinale() {
     const el = trigger.current;
     const st = stage.current;
     if (!el || !st) return;
-    const q = gsap.utils.selector(st);
 
-    if (prefersReducedMotion()) {
-      gsap.set(q(".finale-logo"), { autoAlpha: 1, scale: 1 });
-      gsap.set(q(".finale-tag"), { autoAlpha: 1 });
-      return;
-    }
-
+    // Scroll-driven (not auto-playing) → safe to run even with Reduce Motion,
+    // so the logo "comes forward" on mobile too and the section isn't dead scroll.
     const ctx = gsap.context(() => {
       const tl = gsap.timeline({
         scrollTrigger: { trigger: el, start: "top top", end: "bottom bottom", scrub: 1 },
