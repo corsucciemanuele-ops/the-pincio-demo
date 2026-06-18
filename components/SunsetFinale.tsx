@@ -25,24 +25,40 @@ export default function SunsetFinale() {
     const st = stage.current;
     if (!el || !st) return;
 
-    // Scroll-driven (not auto-playing) → safe to run even with Reduce Motion,
-    // so the logo "comes forward" on mobile too and the section isn't dead scroll.
     const ctx = gsap.context(() => {
-      const tl = gsap.timeline({
-        scrollTrigger: { trigger: el, start: "top top", end: "bottom bottom", scrub: 1 },
+      const mm = gsap.matchMedia();
+
+      // Desktop: tall sticky section, logo resolves on a scrub timeline.
+      mm.add("(min-width: 1024px)", () => {
+        const tl = gsap.timeline({
+          scrollTrigger: { trigger: el, start: "top top", end: "bottom bottom", scrub: 1 },
+        });
+        tl.fromTo(".finale-logo",
+          { autoAlpha: 0, scale: 0.86, filter: "blur(8px)" },
+          { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.4, ease: "power2.out" }, 0.25)
+          .fromTo(".finale-tag", { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.3 }, 0.5);
       });
-      tl.fromTo(".finale-logo",
-        { autoAlpha: 0, scale: 0.86, filter: "blur(8px)" },
-        { autoAlpha: 1, scale: 1, filter: "blur(0px)", duration: 0.4, ease: "power2.out" }, 0.25)
-        .fromTo(".finale-tag", { autoAlpha: 0, y: 16 }, { autoAlpha: 1, y: 0, duration: 0.3 }, 0.5);
+
+      // Mobile: normal 100vh section, logo reveals once on enter (rock-solid on
+      // touch — no sticky/scrub jank, no dead scroll).
+      mm.add("(max-width: 1023px)", () => {
+        gsap.fromTo(".finale-logo",
+          { autoAlpha: 0, scale: 0.9, filter: "blur(6px)", y: 24 },
+          { autoAlpha: 1, scale: 1, filter: "blur(0px)", y: 0, duration: 1.2, ease: "power3.out",
+            scrollTrigger: { trigger: st, start: "top 60%" } });
+        gsap.fromTo(".finale-tag",
+          { autoAlpha: 0, y: 16 },
+          { autoAlpha: 1, y: 0, duration: 0.9, ease: "power3.out",
+            scrollTrigger: { trigger: st, start: "top 50%" } });
+      });
     }, st);
 
     return () => ctx.revert();
   }, []);
 
   return (
-    <section ref={trigger} id="finale" className="relative h-[200vh] bg-indigo">
-      <div ref={stage} className="sticky top-0 h-[100svh] overflow-hidden">
+    <section ref={trigger} id="finale" className="relative h-[100svh] bg-indigo lg:h-[200vh]">
+      <div ref={stage} className="relative h-[100svh] overflow-hidden lg:sticky lg:top-0">
         {/* quiet dark field */}
         <div className="absolute inset-0" style={{ background: "radial-gradient(120% 90% at 50% 80%, #2A2640 0%, #141430 45%, #070A1E 100%)" }} />
 
