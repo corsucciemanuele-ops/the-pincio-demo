@@ -97,10 +97,28 @@ html.lenis body {
   will-change: transform;
 }
 
+/* Continuous brand marquee — defined globally and ALWAYS animating (a gentle
+   decorative loop), so it never freezes on mobile even with "Reduce Motion". */
+@keyframes pincio-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+.marquee-track {
+  display: flex;
+  width: max-content;
+  animation: pincio-marquee 38s linear infinite;
+  will-change: transform;
+}
+
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *:not(.marquee-track) {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
 }
+
