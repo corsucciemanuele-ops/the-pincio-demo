@@ -156,3 +156,17 @@ Regola: ciò che funziona solo su PC e non su mobile = **rotto**, non da rifinir
 
 > Metodo: piano approvato → eseguo a blocchi, in locale, controllando ogni
 > pezzo a larghezza mobile prima di proseguire.
+
+---
+
+## Stato avanzamento sessione v3
+- [x] **Blocco 1** — riordino struttura (Manifesto, Le sere in alto, via tre tempi/gallery/showcase bites, marquee dopo manifesto)
+- [x] **Blocco 2** — reframe "L'esperienza del luogo" (rinomina, immersione, via lista-feature, riga Bites dentro)
+- [x] **Blocco 3** — effetti mobile: marquee sempre attivo; rimosso il freeze globale da "Riduci movimento"; preloader con safety timeout; lazy-load immagini; finale responsive (mobile: reveal one-shot, no sticky-scrub jank)
+- [x] **Blocco 4** — Dove siamo: sinergia + cross-link Nido del Corvo (nidodelcorvo.it)
+- [~] **Blocco 5** — Supabase: API `/api/invito` **pronta e auto-cablante**. Si attiva da sola appena su Vercel ci sono `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` e la tabella `invites` (SQL nel file route.ts). Finché mancano: valida + GDPR + log, risponde `{ok, stored:false}`.
+
+### Per attivare la lista (quando vuoi)
+1. Supabase → crea tabella `invites` (SQL in `app/api/invito/route.ts`).
+2. Vercel → Settings → Environment Variables: `SUPABASE_URL`, `SUPABASE_SERVICE_ROLE_KEY`.
+3. Redeploy. Fine — gli iscritti finiscono in tabella, senza modifiche al codice.
