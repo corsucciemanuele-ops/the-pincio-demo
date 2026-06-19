@@ -8,12 +8,14 @@ import { gsap } from "@/lib/gsap";
  * (animated, low opacity — not static dots), and the logo resolving on scroll.
  * No lake/sunset footage (that belongs to Nido del Corvo).
  */
-const EMBERS = Array.from({ length: 14 }).map((_, i) => ({
-  left: (i * 37) % 100,
-  delay: (i % 7) * 1.1,
-  dur: 9 + (i % 5) * 2,
-  size: 2 + (i % 3),
-  drift: (i % 2 ? 1 : -1) * (8 + (i % 4) * 6),
+// Soft, sparse fireflies — few, large, blurred, slow → premium (not "pixels").
+const EMBERS = Array.from({ length: 11 }).map((_, i) => ({
+  left: (i * 53 + 7) % 100,
+  delay: (i % 6) * 1.8,
+  dur: 15 + (i % 5) * 2.5,
+  size: 4 + (i % 4) * 1.6,
+  drift: (i % 2 ? 1 : -1) * (22 + (i % 4) * 10),
+  peak: 0.35 + (i % 3) * 0.12,
 }));
 
 export default function SunsetFinale() {
@@ -62,7 +64,7 @@ export default function SunsetFinale() {
         {/* quiet dark field */}
         <div className="absolute inset-0" style={{ background: "radial-gradient(120% 90% at 50% 80%, #2A2640 0%, #141430 45%, #070A1E 100%)" }} />
 
-        {/* embers rising */}
+        {/* fireflies drifting up */}
         <div className="absolute inset-0">
           {EMBERS.map((e, i) => (
             <span
@@ -70,11 +72,13 @@ export default function SunsetFinale() {
               className="ember absolute rounded-full"
               style={{
                 left: `${e.left}%`,
-                bottom: "-6%",
+                bottom: "-8%",
                 width: e.size,
                 height: e.size,
-                background: "radial-gradient(circle, rgba(255,214,160,0.95), rgba(255,200,140,0) 70%)",
+                background: "radial-gradient(circle, rgba(255,222,176,0.95), rgba(255,200,140,0) 72%)",
+                filter: "blur(1px)",
                 ["--drift" as string]: `${e.drift}px`,
+                ["--peak" as string]: e.peak,
                 animationDelay: `${e.delay}s`,
                 animationDuration: `${e.dur}s`,
               }}
@@ -84,30 +88,46 @@ export default function SunsetFinale() {
 
         <div className="pointer-events-none absolute inset-0" style={{ background: "radial-gradient(120% 90% at 50% 42%, transparent 55%, rgba(4,6,18,0.6) 120%)" }} />
 
-        <div className="absolute inset-0 z-10 flex flex-col items-center justify-center text-center">
-          <div className="finale-logo flex flex-col items-center opacity-0">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-white.svg" alt="The Pincio" className="w-[min(72vw,440px)] drop-shadow-[0_8px_40px_rgba(0,0,0,0.6)]" />
+        <div className="absolute inset-0 z-10 flex items-center justify-center text-center">
+          {/* breathing warm halo — gives the logo life (never fully static) */}
+          <div className="finale-halo pointer-events-none absolute" />
+          <div className="relative flex flex-col items-center">
+            <div className="finale-logo flex flex-col items-center opacity-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src="/logo-white.svg" alt="The Pincio" className="w-[min(72vw,440px)] drop-shadow-[0_8px_40px_rgba(0,0,0,0.6)]" />
+            </div>
+            <p className="finale-tag mt-6 font-display text-2xl italic text-white/85 opacity-0 sm:text-3xl">
+              L&apos;estate ha un indirizzo.
+            </p>
           </div>
-          <p className="finale-tag mt-6 font-display text-2xl italic text-white/85 opacity-0 sm:text-3xl">
-            L&apos;estate ha un indirizzo.
-          </p>
         </div>
       </div>
 
       <style jsx>{`
         .ember {
           animation-name: rise;
-          animation-timing-function: ease-in;
+          animation-timing-function: ease-in-out;
           animation-iteration-count: infinite;
           will-change: transform, opacity;
           opacity: 0;
         }
         @keyframes rise {
           0% { transform: translate3d(0, 0, 0); opacity: 0; }
-          15% { opacity: 0.8; }
-          80% { opacity: 0.5; }
-          100% { transform: translate3d(var(--drift, 0), -78vh, 0); opacity: 0; }
+          20% { opacity: var(--peak, 0.4); }
+          80% { opacity: calc(var(--peak, 0.4) * 0.6); }
+          100% { transform: translate3d(var(--drift, 0), -86vh, 0); opacity: 0; }
+        }
+        .finale-halo {
+          width: min(86vw, 560px);
+          height: min(86vw, 560px);
+          border-radius: 9999px;
+          background: radial-gradient(circle, rgba(255,200,140,0.18), rgba(255,200,140,0.05) 45%, transparent 70%);
+          animation: halo 7s ease-in-out infinite;
+          will-change: transform, opacity;
+        }
+        @keyframes halo {
+          0%, 100% { transform: scale(0.92); opacity: 0.5; }
+          50% { transform: scale(1.06); opacity: 0.85; }
         }
       `}</style>
     </section>

@@ -3,36 +3,23 @@
 export default function Footer() {
   return (
     <footer className="relative overflow-hidden bg-ink text-cream">
-      <div className="container-edge py-20 sm:py-28">
-        <div className="grid grid-cols-1 gap-10 border-t border-cream/15 pt-12 sm:grid-cols-3">
-          <div className="flex items-center gap-4">
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src="/logo-mark.svg" alt="" className="h-11 w-auto opacity-90" />
-            <span className="font-display text-2xl text-cream">The Pincio</span>
-          </div>
-          <div className="space-y-2">
-            <p className="label text-cream/45">The Pincio · Pool · Bites · Bar</p>
-            <p className="label text-cream/45">
-              Estate 2027 · Sul colle, a bordo piscina
-            </p>
-          </div>
-          <div className="space-y-2 sm:text-right">
-            <p className="label text-cream/45">
-              Via Colle Igea 22/B — Sassocorvaro Auditore (PU)
-            </p>
-            <p className="label text-cream/45">© Pincio di Valentini Annita Srl</p>
-          </div>
-        </div>
-      </div>
+      <div className="container-edge py-24 text-center sm:py-28">
+        {/* Clean, contained brand sign-off (vector logo) — premium, never cut */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src="/logo-white.svg"
+          alt="The Pincio"
+          className="mx-auto w-[min(62vw,300px)] opacity-90"
+        />
+        <p className="label mt-6 text-cream/45">Estate 2027 · Sul colle, a bordo piscina</p>
 
-      {/* Oversized watermark wordmark */}
-      <div
-        aria-hidden
-        className="pointer-events-none select-none overflow-hidden"
-      >
-        <p className="-mb-[2.5vw] text-center font-display text-[22vw] font-light leading-none text-cream/[0.04]">
-          Pincio
-        </p>
+        <div className="mx-auto mt-14 grid max-w-3xl grid-cols-1 gap-6 border-t border-cream/12 pt-10 text-center sm:grid-cols-3 sm:text-left">
+          <p className="label text-cream/45">The Pincio · Pool · Bites · Bar</p>
+          <p className="label text-cream/45 sm:text-center">
+            Via Colle Igea 22/B<br className="hidden sm:block" /> Sassocorvaro Auditore (PU)
+          </p>
+          <p className="label text-cream/45 sm:text-right">© Pincio di Valentini Annita Srl</p>
+        </div>
       </div>
     </footer>
   );
