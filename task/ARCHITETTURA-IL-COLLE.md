@@ -58,3 +58,37 @@ resta: **registrazione → database → email marketing**.
   auto-cablante a Supabase.
 - Nido del Corvo: da fare (chat dedicata).
 - IL COLLE: da fare (chat dedicata).
+
+---
+
+## Notifiche push — ESSENZIALE (da fare, in futuro)
+Richiesta esplicita: le push sono un obiettivo essenziale (marketing/richiamo
+clienti). Non è un interruttore: è un piccolo sistema. Cosa serve:
+
+**Pezzi tecnici**
+- Service worker (già presente) + **Web Push API**.
+- **Chiavi VAPID** (pubblica/privata) per firmare gli invii.
+- **Tabella `push_subscriptions`** su Supabase (endpoint + chiavi per utente),
+  collegata al contatto (campo `luogo`: pincio / nido).
+- Un **mittente**: API route/cron con libreria `web-push` (DIY) **oppure** un
+  servizio tipo **OneSignal** (SDK + dashboard per comporre/inviare).
+- **UX permesso**: chiedere il consenso al momento giusto (dopo aver dato
+  valore), non al primo caricamento.
+
+**Vincolo iOS (importante)**
+- Su iPhone le push funzionano **solo da iOS 16.4+** e **solo se la PWA è
+  installata** sulla Home. → bisogna spingere "Aggiungi a Home".
+- Su Android/desktop: funzionano nel browser senza installare.
+
+**Due strade quando lo faremo**
+- A) **DIY** (`web-push` + VAPID + Supabase + endpoint invio + mini-admin):
+  controllo totale, gratis, più codice.
+- B) **OneSignal** (o simile): SDK drop-in, gestisce iscrizioni + invii +
+  dashboard per inviare campagne. Più veloce per il gestore, dipende da terzi.
+- *Consiglio per un gestore non tecnico:* B (dashboard per inviare push da
+  soli), salvo si voglia proprietà totale del dato → allora A.
+
+**Prerequisiti prima delle push**
+1. Supabase attivo (contatti) — vedi Blocco 5.
+2. PWA installabile (✅ fatta) + campagna "Aggiungi a Home" verso i clienti.
+3. Poi: scelta A/B → implementazione + test su device reale.
