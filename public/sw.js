@@ -1,7 +1,7 @@
 /* The Pincio — service worker (leggero).
    Obiettivo: installabilità + apertura veloce alle visite successive + un
    minimo offline. Non cacha i video (troppo pesanti per mobile). */
-const CACHE = "pincio-v1";
+const CACHE = "pincio-v2";
 const PRECACHE = [
   "/",
   "/manifest.webmanifest",
@@ -31,8 +31,14 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(req.url);
   if (url.origin !== self.location.origin) return;
 
-  // Mai cachare i video (pesanti) — vanno sempre in rete.
-  if (req.destination === "video" || /\.(mp4|webm|mov)$/i.test(url.pathname)) return;
+  // Mai toccare i video né le richieste Range (chunk media): lasciarle al
+  // browser. Intercettarle rompe la riproduzione nella PWA su iOS.
+  if (
+    req.destination === "video" ||
+    req.destination === "audio" ||
+    req.headers.has("range") ||
+    /\.(mp4|webm|mov)$/i.test(url.pathname)
+  ) return;
 
   // Navigazioni (pagine): network-first, fallback alla cache / home.
   if (req.mode === "navigate") {

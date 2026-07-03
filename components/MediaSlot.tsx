@@ -38,16 +38,66 @@ export default function MediaSlot({
   const [failed, setFailed] = useState(false);
   const media = failed ? null : entry;
 
+  // A launch-time error (flaky network/decoder, common in the installed PWA)
+  // must not hide the video forever: retry a couple of times, then give up.
+  const videoRetries = useRef(0);
+  const onVideoError = () => {
+    const v = video.current;
+    if (v && videoRetries.current < 2) {
+      videoRetries.current += 1;
+      setTimeout(() => {
+        v.load();
+        v.play().catch(() => {});
+      }, 900 * videoRetries.current);
+    } else {
+      setFailed(true);
+    }
+  };
+
   // iOS/Safari: guarantee muted-inline autoplay (otherwise a play button shows).
+  // In standalone PWA mode autoplay is stricter (e.g. Low Power Mode) and the
+  // pipeline can stall on launch, so retry on media events, on first gesture,
+  // and when the app returns visible; reload the element once if it never loads.
   useEffect(() => {
     const v = video.current;
     if (!v) return;
     v.muted = true;
     v.defaultMuted = true;
-    const tryPlay = () => v.play().catch(() => {});
+    let reloaded = false;
+    const tryPlay = () => {
+      if (!v.isConnected || !v.paused) return;
+      v.play().catch(() => {
+        if (!reloaded && v.readyState === 0) {
+          reloaded = true;
+          v.load();
+        }
+      });
+    };
+    const onVisible = () => {
+      if (document.visibilityState === "visible") tryPlay();
+    };
+    const gesture = { passive: true } as AddEventListenerOptions;
+    const removeGestures = () => {
+      window.removeEventListener("touchstart", tryPlay);
+      window.removeEventListener("click", tryPlay);
+      window.removeEventListener("scroll", tryPlay);
+    };
     tryPlay();
-    v.addEventListener("canplay", tryPlay, { once: true });
-    return () => v.removeEventListener("canplay", tryPlay);
+    v.addEventListener("loadedmetadata", tryPlay);
+    v.addEventListener("canplay", tryPlay);
+    // once actually playing, the gesture fallbacks are no longer needed
+    v.addEventListener("playing", removeGestures);
+    document.addEventListener("visibilitychange", onVisible);
+    window.addEventListener("touchstart", tryPlay, gesture);
+    window.addEventListener("click", tryPlay, gesture);
+    window.addEventListener("scroll", tryPlay, gesture);
+    return () => {
+      v.removeEventListener("loadedmetadata", tryPlay);
+      v.removeEventListener("canplay", tryPlay);
+      v.removeEventListener("playing", removeGestures);
+      document.removeEventListener("visibilitychange", onVisible);
+      removeGestures();
+    };
   }, [media?.src]);
 
   useEffect(() => {
@@ -77,8 +127,11 @@ export default function MediaSlot({
         {/* graded placeholder — always present, also acts as <video> poster */}
         <div className="absolute inset-0" style={{ background: poster }} />
         {media?.type === "video" && (
+          // src directly on <video> (not a <source> child): more reliable for
+          // autoplay on iOS, especially in installed-PWA/standalone mode.
           <video
             ref={video}
+            src={media.src}
             className="absolute inset-0 h-full w-full object-cover"
             autoPlay
             muted
@@ -86,10 +139,8 @@ export default function MediaSlot({
             playsInline
             preload="auto"
             poster={media.poster}
-            onError={() => setFailed(true)}
-          >
-            <source src={media.src} onError={() => setFailed(true)} />
-          </video>
+            onError={onVideoError}
+          />
         )}
         {media?.type === "image" && (
           // eslint-disable-next-line @next/next/no-img-element
