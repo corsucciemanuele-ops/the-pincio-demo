@@ -25,6 +25,8 @@ export const metadata: Metadata = {
   description:
     "Sul colle, nel cuore del Montefeltro, The Pincio nasce come destinazione d'estate: piscina, aperitivi e sere a bordo acqua. Apertura estate 2027.",
   applicationName: "The Pincio",
+  // Pre-lancio: il sito non deve finire sui motori di ricerca
+  robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
   manifest: "/manifest.webmanifest",
   appleWebApp: {
     capable: true,
