@@ -11,11 +11,13 @@ import Invito from "@/components/Invito";
 import SunsetFinale from "@/components/SunsetFinale";
 import Footer from "@/components/Footer";
 import ScrollProgress from "@/components/ScrollProgress";
+import IlColle from "@/components/IlColle";
 
 export default function Home() {
   return (
     <>
       <Preloader />
+      <IlColle />
       <ScrollProgress />
       <Header />
       <main>

@@ -1,0 +1,40 @@
+{
+ "bbox_utm32": [
+  777000.0,
+  4850090.0,
+  785000.0,
+  4857090.0
+ ],
+ "size_m": [
+  8000.0,
+  7000.0
+ ],
+ "dem": {
+  "file": "dem-400x350.png",
+  "w": 400,
+  "h": 350,
+  "base_m": 148.0,
+  "scale": 0.1,
+  "min": 148.69415283203125,
+  "max": 584.7557373046875
+ },
+ "nido_m": [
+  354.8055730081396,
+  -444.1697389604524
+ ],
+ "nido_latlon": [
+  43.7778804,
+  12.4961851
+ ],
+ "crediti": "Ortofoto AGEA 2022 (Regione Marche) CC BY 4.0, modificata; DEM TINITALY 1.1 INGV CC BY 4.0",
+ "dettaglio": {
+  "box_m": [
+   -2600,
+   -1300,
+   3200,
+   2300
+  ],
+  "mobile": "dettaglio-m.webp",
+  "desktop": "dettaglio-d.webp"
+ }
+}

@@ -75,6 +75,9 @@ export default function Header() {
               {n.label}
             </button>
           ))}
+          <a href="/?ilcolle=1" className="label text-stone transition-colors duration-300 hover:text-ink">
+            Il Colle
+          </a>
           <button
             onClick={() => go("#invito")}
             className="label rounded-full border border-ink/25 px-5 py-2.5 text-ink transition-colors duration-300 hover:bg-ink hover:text-cream"
@@ -117,6 +120,9 @@ export default function Header() {
               {n.label}
             </button>
           ))}
+          <a href="/?ilcolle=1" className="label text-stone">
+            Il Colle
+          </a>
           <button
             onClick={() => go("#invito")}
             className="label mt-2 self-start rounded-full border border-ink/25 px-5 py-2.5 text-ink"
