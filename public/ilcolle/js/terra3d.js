@@ -22,6 +22,8 @@ const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module
 export async function createTerra(el, opts = {}) {
   const THREE = await import(THREE_URL);
   const mobile = window.matchMedia('(max-width: 767px)').matches;
+  // iPhone/iPad: memoria per scheda limitata -> texture più piccole e risoluzione di disegno ridotta
+  const ios = /iP(hone|ad|od)/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   const o = Object.assign({
     base: 'media/terra/', textureMobile: 'orto-2048.webp', textureDesktop: 'orto-3072.webp', v: '',
     esagera: 1.2,
@@ -38,7 +40,7 @@ export async function createTerra(el, opts = {}) {
 
   // ---------- renderer
   const renderer = new THREE.WebGLRenderer({ antialias: !mobile, alpha: false, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 2 : 1.75));
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, ios ? 1.5 : mobile ? 2 : 1.75));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.autoClear = false;
   el.appendChild(renderer.domElement);
@@ -71,7 +73,7 @@ export async function createTerra(el, opts = {}) {
 
   // ---------- ortofoto
   const loader = new THREE.TextureLoader();
-  const orto = await new Promise((res, rej) => loader.load(q(mobile ? o.textureMobile : o.textureDesktop), res, undefined, rej));
+  const orto = await new Promise((res, rej) => loader.load(q(ios ? 'orto-ios.webp' : mobile ? o.textureMobile : o.textureDesktop), res, undefined, rej));
   orto.colorSpace = THREE.SRGBColorSpace;
   orto.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
 
@@ -291,6 +293,7 @@ export async function createTerra(el, opts = {}) {
   let raf = 0, paused = false, last = performance.now(), tempo = 0;
   let frames = 0, fpsT0 = 0, lentoRisolto = false, risolviLento;
   const lento = new Promise((r) => { risolviLento = r; });
+  renderer.domElement.addEventListener('webglcontextlost', (e) => { e.preventDefault(); risolviLento('contesto perso'); });
   function draw() {
     renderer.clear();
     renderer.render(scene, camera);
@@ -315,7 +318,7 @@ export async function createTerra(el, opts = {}) {
     }
   }
   if (det) {
-    const tex = (mobile ? det.mobile : det.desktop);
+    const tex = ios ? 'dettaglio-ios.webp' : (mobile ? det.mobile : det.desktop);
     loader.load(q(tex), (t) => {
       t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = orto.anisotropy;
       t.minFilter = THREE.LinearMipmapLinearFilter; t.generateMipmaps = true;
@@ -353,7 +356,9 @@ export async function createTerra(el, opts = {}) {
 
 async function loadImageData(url) {
   const blob = await (await fetch(url)).blob();
-  const bmp = await createImageBitmap(blob, { colorSpaceConversion: 'none', premultiplyAlpha: 'none' });
+  let bmp;
+  try { bmp = await createImageBitmap(blob, { colorSpaceConversion: 'none', premultiplyAlpha: 'none' }); }
+  catch (e) { bmp = await createImageBitmap(blob); }                 // Safari meno recenti: senza opzioni
   const c = document.createElement('canvas'); c.width = bmp.width; c.height = bmp.height;
   const ctx = c.getContext('2d', { willReadFrequently: true, colorSpace: 'srgb' });
   ctx.drawImage(bmp, 0, 0);

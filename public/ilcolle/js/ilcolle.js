@@ -13,7 +13,7 @@
    Per aggiungerlo al Pincio: copiare js/ilcolle.js, js/terra3d.js e media/terra/ e chiamare
    montaIlColle({ sito: 'pincio', ... }).
    ========================================================= */
-const V = '20261010-2';
+const V = '20261011-1';
 const MEDIA = new URL('../media/', import.meta.url).href;
 
 // posizioni nell'intro (metri, x est, z sud): Nido reale; il Pincio in fondo alla strada,
@@ -25,6 +25,12 @@ const LOCALI = {
 // titolo: Futura (su iPhone/Mac di sistema) o Jost, il carattere di "RISTORANTE SUL COLLE" del logo
 const TITOLO = { font: "400 clamp(1.9rem, 8.6vw, 4.6rem)/1 Futura, Jost, 'Century Gothic', sans-serif", sp: '.2em', fonts: 'family=Jost:wght@400' };
 
+// riserva a foto: vista finale già fotografata, con le posizioni dei locali (frazioni dell'immagine)
+const RISERVA = {
+  mobile:  { w: 1080, h: 2337, pin: { nido: [0.5071, 0.4887], pincio: [0.39, 0.4919] } },
+  desktop: { w: 2400, h: 1500, pin: { nido: [0.503, 0.4868], pincio: [0.4511, 0.4951] } }
+};
+
 export function deveMostrare() {
   const q = location.search;
   if (/[?&]ilcolle=1\b/.test(q)) return true;
@@ -32,7 +38,17 @@ export function deveMostrare() {
   try { return !localStorage.getItem('ilcolle-visto'); } catch (e) { return true; }
 }
 
-export async function montaIlColle({ sito, links, onFine, lenis }) {
+export async function montaIlColle(opts) {
+  try { return await monta(opts); }
+  catch (e) { smonta(opts); return null; }
+}
+function smonta({ onFine } = {}) {                    // via d'uscita sicura: la pagina vera sempre accessibile
+  document.querySelectorAll('.ilc, .ilc-spazio').forEach((n) => n.remove());
+  document.documentElement.classList.remove('ilc-attiva');
+  try { window.ScrollTrigger && window.ScrollTrigger.refresh(); } catch (e) {}
+  onFine && onFine();
+}
+async function monta({ sito, links, onFine, lenis }) {
   const gsap = window.gsap, ST = window.ScrollTrigger;
   try { localStorage.setItem('ilcolle-visto', '1'); } catch (e) {}
   const mobile = matchMedia('(max-width: 767px)').matches;
@@ -46,7 +62,9 @@ export async function montaIlColle({ sito, links, onFine, lenis }) {
   el.innerHTML = `
     <div class="ilc__scena"><div class="ilc__3d"></div>
       <picture><source media="(max-width: 767px)" srcset="${MEDIA}terra/riserva-mobile.webp?v=${V}">
-      <img class="ilc__riserva" src="${MEDIA}terra/riserva-desktop.webp?v=${V}" alt="" decoding="async" loading="lazy"></picture></div>
+      <img class="ilc__riserva" src="${MEDIA}terra/riserva-desktop.webp?v=${V}" alt="" decoding="async" loading="lazy"></picture>
+      <picture><source media="(max-width: 767px)" srcset="${MEDIA}terra/riserva-fine-mobile.webp?v=${V}">
+      <img class="ilc__riserva ilc__riserva--fine" src="${MEDIA}terra/riserva-fine-desktop.webp?v=${V}" alt="" decoding="async" loading="lazy"></picture></div>
     <div class="ilc__luce"></div>
     <div class="ilc__testi">
       <p class="ilc__titolo" aria-label="Il Colle"><span>IL COLLE</span></p>
@@ -78,8 +96,18 @@ export async function montaIlColle({ sito, links, onFine, lenis }) {
   // ---------- scena 3D (riserva: foto)
   let terra = null, finito = false;
   const riserva = el.querySelector('.ilc__riserva');
-  const usaRiserva = () => { riserva.loading = 'eager'; el.classList.add('is-riserva'); el.classList.remove('is-3d'); if (terra) { terra.distruggi(); terra = null; } };
-  if (/[?&]terra=riserva/.test(location.search)) usaRiserva();
+  const riservaFine = el.querySelector('.ilc__riserva--fine');
+  let inRiserva = false;
+  const usaRiserva = () => {
+    if (inRiserva || finito) return; inRiserva = true;
+    riserva.loading = 'eager'; riservaFine.loading = 'eager';
+    el.classList.add('is-riserva'); el.classList.remove('is-3d');
+    if (terra) { try { terra.distruggi(); } catch (e) {} terra = null; }
+  };
+  // se il terreno non è pronto entro 3 secondi: foto
+  setTimeout(() => { if (!terra) usaRiserva(); }, 3000);
+  const webgl = (() => { try { const c = document.createElement('canvas'); return !!(c.getContext('webgl2') || c.getContext('webgl')); } catch (e) { return false; } })();
+  if (/[?&]terra=riserva/.test(location.search) || !webgl) usaRiserva();
   else import(`./terra3d.js?v=${V}`).then((m) => m.createTerra(el.querySelector('.ilc__3d'), {
     base: `${MEDIA}terra/`, v: V,
     camera: (meta, mob) => {
@@ -92,7 +120,7 @@ export async function montaIlColle({ sito, links, onFine, lenis }) {
                a: { target: nido, distanza: D * (mob ? .72 : .78), inclinazione: mob ? 46 : 50, azimut: az } };
     }
   })).then((t) => {
-    if (finito) { t.distruggi(); return; }
+    if (finito || inRiserva) { t.distruggi(); return; }
     terra = t; el.classList.add('is-3d');
     t.lento.then(usaRiserva);
   }).catch(usaRiserva);
@@ -114,14 +142,15 @@ export async function montaIlColle({ sito, links, onFine, lenis }) {
   })
     .to(['.ilc__testi', '.ilc__ang', '.ilc__luce'], { opacity: 0, duration: .2 }, .02)
     .to(disc, { p: 1, duration: .9, ease: 'power1.inOut', onUpdate: () => terra && terra.progress(disc.p) }, 0)
-    .to(riserva, { scale: 1.3, duration: .9, ease: 'power1.inOut' }, 0)
+    .fromTo(riserva, { opacity: 1, scale: 1 }, { scale: 1.3, opacity: 0, duration: .9, ease: 'power1.inOut' }, 0)
+    .fromTo(riservaFine, { opacity: 0, scale: 1.12 }, { opacity: 1, scale: 1, duration: .9, ease: 'power1.inOut' }, 0)
     .to({}, { duration: .1 });
 
   requestAnimationFrame(() => ST && ST.refresh());
   setTimeout(() => ST && ST.refresh(), 1200);
   (function segui() {
     if (finito) return;
-    const pos = pins.map((p) => terra ? terra.schermo(p.x, p.z) : null);
+    const pos = pins.map((p) => terra ? terra.schermo(p.x, p.z) : inRiserva ? posRiserva(p.id) : null);
     // la linea va verso l'esterno: il pallino più a sinistra a sinistra, l'altro a destra
     const sx = pos[0] && pos[1] ? (pos[0].x <= pos[1].x ? 0 : 1) : 0;
     pins.forEach((p, k) => {
@@ -137,6 +166,13 @@ export async function montaIlColle({ sito, links, onFine, lenis }) {
     });
     requestAnimationFrame(segui);
   })();
+
+  // posizione dei pallini sulla foto finale (object-fit: cover)
+  function posRiserva(id) {
+    const R = RISERVA[mobile ? 'mobile' : 'desktop'], W = el.clientWidth, H = el.clientHeight;
+    const k = Math.max(W / R.w, H / R.h), dx = (W - R.w * k) / 2, dy = (H - R.h * k) / 2;
+    return { x: dx + R.pin[id][0] * R.w * k, y: dy + R.pin[id][1] * R.h * k, visibile: true };
+  }
 
   // ---------- ingresso nei locali (scivolo)
   function entra(id, nome) {
@@ -179,8 +215,9 @@ function stile(T) {
 .ilc__scena{ position:absolute; inset:0; }
 .ilc__3d{ position:absolute; inset:0; opacity:0; transition:opacity .9s ease; }
 .ilc.is-3d .ilc__3d{ opacity:1; }
-.ilc__riserva{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity .6s ease; }
-.ilc.is-riserva .ilc__riserva{ opacity:1; }
+.ilc__riserva{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+.ilc__riserva{ visibility:hidden; transition:none; }
+.ilc.is-riserva .ilc__riserva{ visibility:visible; }
 .ilc__luce{ position:absolute; left:50%; top:50%; width:min(140vw,1000px); height:min(80vw,560px); transform:translate(-50%,-50%);
   background:radial-gradient(closest-side, rgba(255,250,238,.24), rgba(255,250,238,.08) 50%, rgba(255,250,238,0)); }
 .ilc__testi{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 16px; }
