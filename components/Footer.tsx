@@ -13,6 +13,9 @@ export default function Footer() {
           <div className="space-y-2">
             <p className="label text-cream/45">The Pincio · Pool · Bites · Bar</p>
             <p className="label text-cream/45">Estate 2027 · Sul colle, a bordo piscina</p>
+            <a href="/?ilcolle=1" className="label inline-flex min-h-[44px] items-center text-cream/80 transition-colors duration-300 hover:text-cream">
+              Il Colle ↺ rivedi il volo sul colle
+            </a>
           </div>
           <div className="space-y-2 sm:text-right">
             <p className="label text-cream/45">Via Colle Igea 22/B — Sassocorvaro Auditore (PU)</p>

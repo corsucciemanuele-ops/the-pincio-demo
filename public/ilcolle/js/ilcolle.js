@@ -13,7 +13,7 @@
    Per aggiungerlo al Pincio: copiare js/ilcolle.js, js/terra3d.js e media/terra/ e chiamare
    montaIlColle({ sito: 'pincio', ... }).
    ========================================================= */
-const V = '20261011-1';
+const V = '20261013-1';
 const MEDIA = new URL('../media/', import.meta.url).href;
 
 // posizioni nell'intro (metri, x est, z sud): Nido reale; il Pincio in fondo alla strada,
@@ -31,10 +31,18 @@ const RISERVA = {
   desktop: { w: 2400, h: 1500, pin: { nido: [0.503, 0.4868], pincio: [0.4511, 0.4951] } }
 };
 
+export function inApp() {
+  try {
+    return navigator.standalone === true ||
+      matchMedia('(display-mode: standalone), (display-mode: fullscreen), (display-mode: minimal-ui)').matches;
+  } catch (e) { return false; }
+}
+
 export function deveMostrare() {
   const q = location.search;
   if (/[?&]ilcolle=1\b/.test(q)) return true;
   if (/[?&]from=ilcolle\b/.test(q)) return false;
+  if (inApp()) return false;                           // app installata aperta dall'icona: mai l'intro
   try { return !localStorage.getItem('ilcolle-visto'); } catch (e) { return true; }
 }
 

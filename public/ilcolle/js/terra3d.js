@@ -309,11 +309,12 @@ export async function createTerra(el, opts = {}) {
     draw();
     if (!lentoRisolto) {
       if (!fpsT0) fpsT0 = now; frames++;
-      if (now - fpsT0 > 1500) {
+      if (now - fpsT0 > 2500) {
         lentoRisolto = true;
         const fps = frames * 1000 / (now - fpsT0);
         api.fps = Math.round(fps);
-        if (fps < 40 && !/[?&]terra=forza/.test(location.search)) risolviLento(fps);
+        // riserva solo se davvero inutilizzabile: 30 fps stabili (Risparmio energetico su iPhone) restano in 3D
+        if (fps < 20 && !/[?&]terra=forza/.test(location.search)) risolviLento(fps);
       }
     }
   }
