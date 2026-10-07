@@ -13,7 +13,7 @@
    Per aggiungerlo al Pincio: copiare js/ilcolle.js, js/terra3d.js e media/terra/ e chiamare
    montaIlColle({ sito: 'pincio', ... }).
    ========================================================= */
-const V = '20261013-1';
+const V = '20261014-1';
 const MEDIA = new URL('../media/', import.meta.url).href;
 
 // posizioni nell'intro (metri, x est, z sud): Nido reale; il Pincio in fondo alla strada,
@@ -23,7 +23,11 @@ const LOCALI = {
   pincio: { nome: 'The Pincio',     off: [-141, 141] }
 };
 // titolo: Futura (su iPhone/Mac di sistema) o Jost, il carattere di "RISTORANTE SUL COLLE" del logo
-const TITOLO = { font: "400 clamp(1.9rem, 8.6vw, 4.6rem)/1 Futura, Jost, 'Century Gothic', sans-serif", sp: '.2em', fonts: 'family=Jost:wght@400' };
+const TITOLO_C = { font: "400 clamp(1.9rem, 8.6vw, 4.6rem)/1 Futura, Jost, 'Century Gothic', sans-serif", sp: '.2em', fonts: 'family=Jost:wght@300;400;500' };
+const TITOLO_PINCIO = { font: "500 clamp(2.3rem, 10.4vw, 5.4rem)/1 'Cormorant Garamond', Georgia, serif", sp: '.16em',
+  fonts: 'family=Cormorant+Garamond:ital,wght@0,400;0,500;1,400&family=Jost:wght@300;400;500' };
+// prova: ?titolo=pincio mostra il titolo nel font del Pincio (da scegliere)
+const TITOLO = /[?&]titolo=pincio\b/.test(location.search) ? TITOLO_PINCIO : TITOLO_C;
 
 // riserva a foto: vista finale già fotografata, con le posizioni dei locali (frazioni dell'immagine)
 const RISERVA = {
@@ -38,8 +42,19 @@ export function inApp() {
   } catch (e) { return false; }
 }
 
+// L'intro esiste solo su computer: schermo largo, mouse, WebGL funzionante.
+// Telefono e tablet entrano diretti nel sito e non scaricano nulla del 3D.
+export function computerAdatto() {
+  try {
+    if (!matchMedia('(min-width: 1024px) and (hover: hover) and (pointer: fine)').matches) return false;
+    const c = document.createElement('canvas');
+    return !!(c.getContext('webgl2') || c.getContext('webgl'));
+  } catch (e) { return false; }
+}
+
 export function deveMostrare() {
   const q = location.search;
+  if (!computerAdatto()) return false;
   if (/[?&]ilcolle=1\b/.test(q)) return true;
   if (/[?&]from=ilcolle\b/.test(q)) return false;
   if (inApp()) return false;                           // app installata aperta dall'icona: mai l'intro
@@ -219,7 +234,7 @@ function stile(T) {
   s.textContent = `
 .ilc-attiva main > :not(.ilc-spazio), .ilc-attiva body > footer, .ilc-attiva .finale{ display:none !important; }
 .ilc{ position:fixed; inset:0; z-index:220; overflow:hidden; pointer-events:none;
-  background:#4a5340; color:#FBF7EF; font-family:Inter,system-ui,sans-serif; }
+  background:#4a5340; color:#FBF7EF; font-family:Jost,system-ui,sans-serif; }
 .ilc__scena{ position:absolute; inset:0; }
 .ilc__3d{ position:absolute; inset:0; opacity:0; transition:opacity .9s ease; }
 .ilc.is-3d .ilc__3d{ opacity:1; }
@@ -231,9 +246,9 @@ function stile(T) {
 .ilc__testi{ position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:0 16px; }
 .ilc__titolo{ margin:0; font:${T.font}; letter-spacing:${T.sp}; margin-right:-${T.sp}; color:#FFFCF4;
   text-shadow:0 0 22px rgba(18,20,14,.42), 0 1px 3px rgba(18,20,14,.38); -webkit-font-smoothing:antialiased; text-rendering:geometricPrecision; }
-.ilc__sotto{ margin:1.1rem 0 0; font:500 .74rem/1.4 Inter, sans-serif; letter-spacing:.26em; text-transform:uppercase; color:#FFFCF4;
+.ilc__sotto{ margin:1.1rem 0 0; font:500 .74rem/1.4 Jost, sans-serif; letter-spacing:.26em; text-transform:uppercase; color:#FFFCF4;
   text-shadow:0 0 14px rgba(18,20,14,.5), 0 1px 2px rgba(18,20,14,.45); }
-.ilc__ang{ position:absolute; font:500 .6rem/1 Inter, sans-serif; letter-spacing:.26em; text-transform:uppercase; color:#FFFCF4;
+.ilc__ang{ position:absolute; font:500 .6rem/1 Jost, sans-serif; letter-spacing:.26em; text-transform:uppercase; color:#FFFCF4;
   text-shadow:0 0 12px rgba(18,20,14,.55), 0 1px 2px rgba(18,20,14,.5); display:flex; align-items:center; gap:.7em; }
 .ilc__ang--tl{ left:20px; top:calc(env(safe-area-inset-top) + 20px); }
 .ilc__ang--tr{ right:20px; top:calc(env(safe-area-inset-top) + 20px); letter-spacing:.16em; }
@@ -254,13 +269,13 @@ function stile(T) {
   box-shadow:0 0 0 1px rgba(30,30,25,.18), 0 1px 6px rgba(30,30,25,.3); transition:transform .3s, background-color .3s; }
 .ilc__linea{ flex:0 0 var(--l, 48px); height:1px; background:linear-gradient(90deg, rgba(251,247,239,.95), rgba(251,247,239,.55)); box-shadow:0 1px 3px rgba(30,30,25,.35); }
 .ilc__pin.a-sinistra .ilc__linea{ background:linear-gradient(270deg, rgba(251,247,239,.95), rgba(251,247,239,.55)); }
-.ilc__nome{ padding:0 8px; white-space:nowrap; font:400 clamp(1.3rem, 5.6vw, 1.9rem)/1 Italiana, serif; letter-spacing:.03em;
+.ilc__nome{ padding:0 8px; white-space:nowrap; font:400 clamp(1.3rem, 5.6vw, 1.9rem)/1 'Cormorant Garamond', Georgia, serif; letter-spacing:.03em;
   text-shadow:0 1px 10px rgba(20,20,15,.6); }
 @media (hover: hover){ .ilc__pin:hover .ilc__punto{ transform:scale(1.25); background:rgba(251,247,239,.6); } }
 .ilc__pin:active .ilc__punto{ transform:scale(1.25); background:rgba(251,247,239,.6); }
 .ilc__pin:focus-visible .ilc__nome{ outline:1px solid #FBF7EF; outline-offset:4px; }
 .ilc__scivolo{ position:absolute; inset:0; z-index:5; display:grid; place-items:center; transform:translateX(100%);
-  transition:transform .7s cubic-bezier(.65,0,.35,1); background:#F7F2E9; color:#3B4339; font:400 1.8rem/1 Italiana, serif; pointer-events:none; }
+  transition:transform .7s cubic-bezier(.65,0,.35,1); background:#F7F2E9; color:#3B4339; font:400 1.8rem/1 'Cormorant Garamond', Georgia, serif; pointer-events:none; }
 .ilc__scivolo.is-pincio{ background:#E8F0EC; color:#1F4A4A; }
 .ilc__scivolo.is-on{ transform:translateX(0); }
 .ilc-spazio{ height:240vh; height:240svh; }`;

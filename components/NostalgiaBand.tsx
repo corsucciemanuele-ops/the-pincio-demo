@@ -11,7 +11,7 @@ export default function NostalgiaBand() {
     <section className="relative bg-cream">
       <div className="container-edge py-20 text-center sm:py-28">
         <HeadingReveal
-          className="mx-auto max-w-3xl font-display text-[clamp(1.6rem,4vw,3.2rem)] font-light leading-[1.12] text-ink"
+          className="mx-auto max-w-3xl font-display text-[clamp(1.75rem,4vw,3.2rem)] font-light leading-[1.12] text-ink"
           lines={[
             "Tutti sanno cosa è stato.",
             <em key="i" className="italic text-sage">Presto saprete cosa diventerà.</em>,

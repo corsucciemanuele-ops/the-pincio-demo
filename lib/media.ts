@@ -6,13 +6,15 @@
  * "Nido del Corvo" and must NOT appear here. Where no real Pincio pool photo
  * exists, the slot stays null → MediaSlot shows a graded placeholder.
  *
- *   type "video" → muted autoplay loop · type "image" → still
+ *   type "video" → foto fissa subito, poi video muto in loop dopo il caricamento
+ *                  (mai con Risparmio dati o rete lenta) · type "image" → still
  */
-export type MediaEntry = { type: "video" | "image"; src: string; poster?: string } | null;
+export type MediaEntry = { type: "video" | "image"; src: string; srcMobile?: string; poster?: string } | null;
 
 export const MEDIA: Record<string, MediaEntry> = {
   // HERO — aerial/pool clip, logo locked on top
-  "hero": { type: "video", src: "/media/hero.mp4", poster: "/media/hero.jpg" },
+  // foto fissa subito (23 KB); video solo dopo il caricamento: telefono 720p 1,2 MB, computer a parte
+  "hero": { type: "video", src: "/media/hero-d.mp4", srcMobile: "/media/hero-m.mp4", poster: "/media/hero-poster.webp" },
 
   // POOL EXPERIENCE — the heart of the brand
   "pool": { type: "image", src: "/media/pool-still.jpg" },

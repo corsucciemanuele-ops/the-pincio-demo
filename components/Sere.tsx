@@ -77,14 +77,14 @@ export default function Sere() {
           <div className="pt-10">
             <p className="label mb-4 text-cream/40">Prossime serate</p>
             {SERATE.length === 0 ? (
-              <p className="font-display text-xl italic text-cream/45">
+              <p className="text-lg text-cream/60">
                 Il calendario delle serate sarà annunciato. Lascia il contatto
                 per saperlo per primo.
               </p>
             ) : (
               SERATE.map((s, i) => (
                 <div key={i} className="flex items-baseline justify-between border-b border-cream/10 py-5">
-                  <span className="font-display text-xl text-cream">{s.title}</span>
+                  <span className="text-lg font-medium text-cream">{s.title}</span>
                   <span className="label text-cream/50">{s.date}</span>
                 </div>
               ))

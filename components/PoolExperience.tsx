@@ -52,7 +52,7 @@ export default function PoolExperience() {
             intorno. Un&apos;oasi disegnata, dove le ore non contano.
           </p>
           {/* riga Bites, leggera, dentro il racconto */}
-          <p data-reveal-child className="mt-6 font-display text-xl italic leading-relaxed text-white/90 drop-shadow-[0_1px_10px_rgba(6,40,46,0.5)]">
+          <p data-reveal-child className="mt-6 text-lg leading-relaxed text-white/90 drop-shadow-[0_1px_10px_rgba(6,40,46,0.5)]">
             La mano del Nido del Corvo, più libera — aperitivo, bites, cocktail
             a bordo piscina.
           </p>

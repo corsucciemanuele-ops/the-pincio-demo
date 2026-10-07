@@ -66,7 +66,7 @@ export default function Invito() {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="la-tua@email.it"
-                  className="w-full bg-transparent py-2 text-center font-display text-xl text-ink outline-none placeholder:text-mist sm:text-left"
+                  className="w-full bg-transparent py-2 text-center font-sans text-lg text-ink outline-none placeholder:text-mist sm:text-left"
                   aria-label="Email"
                 />
                 <button
@@ -97,7 +97,7 @@ export default function Invito() {
             </form>
           ) : (
             <div data-reveal-child className="flex flex-col items-center gap-3 rounded-[2px] border border-sage/30 bg-ivory px-8 py-10">
-              <p className="font-display text-2xl text-sage-deep">Sei sulla lista.</p>
+              <p className="font-display text-[1.75rem] text-sage-deep">Sei sulla lista.</p>
               <p className="text-sm text-stone">Ti scriveremo prima di tutti gli altri.</p>
             </div>
           )}

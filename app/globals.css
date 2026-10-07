@@ -63,7 +63,7 @@ html.lenis body {
   }
 
   .label {
-    @apply font-sans text-[11px] uppercase tracking-label text-stone;
+    @apply font-sans text-[11px] font-medium uppercase tracking-label text-stone;
   }
 
   /* Masked line reveal — each line lives in an overflow-hidden wrapper */
@@ -119,3 +119,24 @@ html.lenis body {
    here, so gentle decorative loops (marquee, light sweep, embers) still run on
    phones that have "Reduce Motion" enabled — they must be visible on mobile. */
 
+
+/* "Il Colle ↺" nel footer: solo su computer con intro 3D (classe messa da IlColle.tsx) */
+.foot-rivedi { display: none; }
+.ha-intro .foot-rivedi { display: inline-flex; }
+.ha-intro .foot-colle-testo { display: none; }
+
+/* Apertura: velo di luce calda che si apre (solo CSS, ~1 s, mai bloccante) */
+.pincio-velo {
+  background: radial-gradient(120% 80% at 50% 45%, #FFF1DC 0%, #F5F0E6 55%, #EFE8D9 100%);
+  animation: pincio-velo 1.05s cubic-bezier(.65, 0, .35, 1) .15s forwards;
+}
+.pincio-velo__mark { animation: pincio-velo-mark 1s ease-out forwards; }
+@keyframes pincio-velo {
+  0% { opacity: 1; clip-path: inset(0 0 0 0); }
+  100% { opacity: 0; clip-path: inset(0 0 100% 0); visibility: hidden; }
+}
+@keyframes pincio-velo-mark {
+  0% { opacity: 0; transform: translateY(8px) scale(.96); }
+  45% { opacity: 1; transform: none; }
+  100% { opacity: 0; transform: translateY(-10px); }
+}

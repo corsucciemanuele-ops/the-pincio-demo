@@ -49,7 +49,7 @@ export default function Manifesto() {
 
         <p
           data-mani
-          className="mt-6 font-display text-[clamp(1.3rem,3vw,2.1rem)] font-light italic text-graphite"
+          className="mt-6 font-display text-[clamp(1.75rem,3vw,2.1rem)] font-light italic text-graphite"
         >
           The Pincio è un invito a rallentare.
         </p>

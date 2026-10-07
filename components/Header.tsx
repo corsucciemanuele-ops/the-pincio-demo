@@ -112,7 +112,7 @@ export default function Header() {
             <button
               key={n.href}
               onClick={() => go(n.href)}
-              className="text-left font-display text-2xl text-ink"
+              className="text-left font-display text-[1.75rem] text-ink"
             >
               {n.label}
             </button>

@@ -18,7 +18,7 @@ export default function Hero() {
       gsap.fromTo(
         "[data-hero-in]",
         { autoAlpha: 0, y: 26 },
-        { autoAlpha: 1, y: 0, duration: 1.4, ease: EASE.soft, stagger: 0.16, delay: reduced ? 0 : 0.4 }
+        { autoAlpha: 1, y: 0, duration: 1, ease: EASE.soft, stagger: 0.1, delay: reduced ? 0 : 0.15 }
       );
 
       if (reduced) return;
@@ -66,7 +66,7 @@ export default function Hero() {
           alt="The Pincio — Pool Bites Bar"
           className="w-[min(78vw,520px)] drop-shadow-[0_10px_50px_rgba(6,12,22,0.65)]"
         />
-        <p data-hero-in className="mt-6 font-display text-[clamp(1.6rem,4vw,3rem)] font-light italic leading-tight text-cream drop-shadow-[0_2px_16px_rgba(8,16,24,0.6)]">
+        <p data-hero-in className="mt-6 font-display text-[clamp(1.75rem,4vw,3rem)] font-light italic leading-tight text-cream drop-shadow-[0_2px_16px_rgba(8,16,24,0.6)]">
           L&apos;estate ha un indirizzo.
         </p>
       </div>
