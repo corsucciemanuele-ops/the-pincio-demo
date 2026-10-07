@@ -31,7 +31,7 @@ export const metadata: Metadata = {
   appleWebApp: {
     capable: true,
     title: "The Pincio",
-    statusBarStyle: "default",
+    statusBarStyle: "black-translucent", // a tutto schermo, come l'app
   },
   icons: {
     icon: [

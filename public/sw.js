@@ -1,7 +1,7 @@
 /* The Pincio — service worker (leggero).
    Obiettivo: installabilità + apertura veloce alle visite successive + un
    minimo offline. Non cacha i video (troppo pesanti per mobile). */
-const CACHE = "pincio-v1";
+const CACHE = "pincio-v2";
 const PRECACHE = [
   "/",
   "/manifest.webmanifest",
@@ -13,7 +13,15 @@ const PRECACHE = [
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE).then((c) => c.addAll(PRECACHE)).then(() => self.skipWaiting())
+    caches.open(CACHE)
+      .then(async (c) => {
+        await c.addAll(PRECACHE);
+        // offline vera: anche i file di Next (script, stili, font) che servono alla home
+        const html = await (await fetch("/", { cache: "no-store" })).text();
+        const statici = [...new Set(html.match(/\/_next\/static\/[^"'\s)]+/g) || [])];
+        await Promise.all(statici.map((u) => c.add(u).catch(() => {})));
+      })
+      .then(() => self.skipWaiting())
   );
 });
 
