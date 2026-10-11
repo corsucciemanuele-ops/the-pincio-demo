@@ -62,17 +62,23 @@ export function deveMostrare() {
 }
 
 // ---------- entrata della pagina (uguale sui due siti): dall'alto, da sfocata e trasparente a nitida
-const PAGINA = () => [...document.body.children].filter((n) => !n.matches('.ilc, script, style, link, noscript, template, svg[width="0"]'));
+const PAGINA = () => [...document.body.children].filter((n) => !n.matches('.ilc, script, style, link, noscript, template, svg[width="0"], .skip-link'));
+// ogni elemento torna alla SUA opacità (es. la griglia di sfondo resta leggerissima)
+const opacitaPropria = (n) => { if (n.__op == null) { const v = parseFloat(getComputedStyle(n).opacity); n.__op = v > 0 ? v : 1; } return n.__op; };
 function nascondiPagina() {
   const g = window.gsap; if (!g) return;
-  g.set(PAGINA(), { opacity: 0, y: -40, filter: 'blur(8px)' });
+  const els = PAGINA(); els.forEach(opacitaPropria);
+  g.set(els, { opacity: 0, y: -40, filter: 'blur(8px)' });
 }
 export function entrataPagina({ dopo } = {}) {
   const g = window.gsap, root = document.documentElement;
   if (!g) { root.classList.remove('ilc-arrivo'); dopo && dopo(); return; }
   const els = PAGINA();
-  if (root.classList.contains('ilc-arrivo')) { g.set(els, { opacity: 0, y: -40, filter: 'blur(8px)' }); root.classList.remove('ilc-arrivo'); }
-  g.to(els, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .8, ease: 'power3.out', overwrite: 'auto',
+  if (root.classList.contains('ilc-arrivo')) {
+    root.classList.remove('ilc-arrivo'); els.forEach(opacitaPropria);
+    g.set(els, { opacity: 0, y: -40, filter: 'blur(8px)' });
+  }
+  g.to(els, { opacity: (i, n) => opacitaPropria(n), y: 0, filter: 'blur(0px)', duration: .8, ease: 'power3.out', overwrite: 'auto',
     clearProps: 'opacity,transform,filter', onComplete: () => dopo && dopo() });
 }
 // arrivo dall'intro dell'altro sito (?from=ilcolle): stessa entrata, senza intro
@@ -251,6 +257,8 @@ async function monta({ sito, links, onFine, lenis }) {
   function chiudi() {
     finito = true;
     tl.scrollTrigger && tl.scrollTrigger.kill(); tl.kill();
+    gsap.set(['.ilc__testi', '.ilc__ang', '.ilc__luce'], { opacity: 0 });
+    if (terra) terra.progress(1); else gsap.set(riserva, { opacity: 0 });
     nascondiPagina();                                        // prima di mostrarla: parte trasparente, 40 px più su, sfocata
     spazio.remove(); root.classList.remove('ilc-attiva');
     window.scrollTo(0, 0); lenis && lenis.scrollTo(0, { immediate: true, force: true });
