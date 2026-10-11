@@ -26,12 +26,13 @@ export default function IlColle() {
       } catch { return false; }
     })();
     if (/[?&]ilcolle=1\b/.test(location.search) && !computer) history.replaceState(null, "", location.pathname + location.hash);
-    if (!computer) return;
+    if (!computer) { document.documentElement.classList.remove("ilc-arrivo"); return; }
     document.documentElement.classList.add("ha-intro");
-    const src = "/ilcolle/js/ilcolle.js";
+    const src = "/ilcolle/js/ilcolle.js?v=20261015-1";
     import(/* webpackIgnore: true */ src)
-      .then((m: { deveMostrare: () => boolean; montaIlColle: (o: object) => void }) => {
+      .then((m: { deveMostrare: () => boolean; montaIlColle: (o: object) => void; arrivoDaIlColle: () => boolean }) => {
         if (annullato) return;
+        if (m.arrivoDaIlColle()) return;          // arrivo dall'intro del Nido: la pagina entra dall'alto
         const mostra = m.deveMostrare();
         // il link "Il Colle" del footer vale una volta: ricaricando non riparte
         if (/[?&]ilcolle=1\b/.test(location.search)) history.replaceState(null, "", location.pathname + location.hash);
@@ -43,7 +44,7 @@ export default function IlColle() {
           onFine: () => ScrollTrigger.refresh(),
         });
       })
-      .catch(() => {});
+      .catch(() => document.documentElement.classList.remove("ilc-arrivo"));
     return () => { annullato = true; };
   }, []);
   return null;

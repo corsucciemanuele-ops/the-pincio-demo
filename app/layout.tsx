@@ -60,7 +60,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="it" className={`${display.variable} ${sans.variable}`}>
+    <html lang="it" className={`${display.variable} ${sans.variable}`} suppressHydrationWarning>
+      <head>
+        {/* arrivo dall'intro "Il Colle" del Nido: pagina nascosta finché non entra dall'alto (max 2,5 s), senza velo d'apertura */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "if(/[?&]from=ilcolle\\b/.test(location.search)){var r=document.documentElement;r.classList.add('ilc-arrivo','da-colle');setTimeout(function(){r.classList.remove('ilc-arrivo')},2500)}",
+          }}
+        />
+      </head>
       <body className="bg-cream text-ink antialiased">
         <ServiceWorker />
         <SmoothScroll>{children}</SmoothScroll>

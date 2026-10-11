@@ -140,3 +140,7 @@ html.lenis body {
   45% { opacity: 1; transform: none; }
   100% { opacity: 0; transform: translateY(-10px); }
 }
+
+/* arrivo dall'intro del Nido: nascosta finché ilcolle.js non la fa entrare; niente velo d'apertura */
+.ilc-arrivo body > * { opacity: 0; }
+.da-colle .pincio-velo { display: none; }

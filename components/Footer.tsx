@@ -18,7 +18,7 @@ export default function Footer() {
             <h2 className="mb-2 text-[12px] font-medium uppercase tracking-[0.24em] text-cream/60">Info e prenotazioni eventi</h2>
             <ul className="space-y-1 text-base leading-relaxed">
               <li><a href="tel:+39072276334" className="inline-flex min-h-[32px] items-center underline decoration-cream/30 underline-offset-4">+39 0722 76334</a></li>
-              <li><a href="mailto:info@thepincio.it" className="inline-flex min-h-[32px] items-center underline decoration-cream/30 underline-offset-4">info@thepincio.it</a></li>
+              {/* info@thepincio.it: nascosta finché il titolare non conferma che la casella esiste */}
             </ul>
           </div>
           <div>

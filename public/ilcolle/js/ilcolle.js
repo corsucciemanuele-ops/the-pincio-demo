@@ -13,7 +13,7 @@
    Per aggiungerlo al Pincio: copiare js/ilcolle.js, js/terra3d.js e media/terra/ e chiamare
    montaIlColle({ sito: 'pincio', ... }).
    ========================================================= */
-const V = '20261014-1';
+const V = '20261015-1';
 const MEDIA = new URL('../media/', import.meta.url).href;
 
 // posizioni nell'intro (metri, x est, z sud): Nido reale; il Pincio in fondo alla strada,
@@ -61,6 +61,26 @@ export function deveMostrare() {
   try { return !localStorage.getItem('ilcolle-visto'); } catch (e) { return true; }
 }
 
+// ---------- entrata della pagina (uguale sui due siti): dall'alto, da sfocata e trasparente a nitida
+const PAGINA = () => [...document.body.children].filter((n) => !n.matches('.ilc, script, style, link, noscript, template, svg[width="0"]'));
+function nascondiPagina() {
+  const g = window.gsap; if (!g) return;
+  g.set(PAGINA(), { opacity: 0, y: -40, filter: 'blur(8px)' });
+}
+export function entrataPagina({ dopo } = {}) {
+  const g = window.gsap, root = document.documentElement;
+  if (!g) { root.classList.remove('ilc-arrivo'); dopo && dopo(); return; }
+  const els = PAGINA();
+  if (root.classList.contains('ilc-arrivo')) { g.set(els, { opacity: 0, y: -40, filter: 'blur(8px)' }); root.classList.remove('ilc-arrivo'); }
+  g.to(els, { opacity: 1, y: 0, filter: 'blur(0px)', duration: .8, ease: 'power3.out', overwrite: 'auto',
+    clearProps: 'opacity,transform,filter', onComplete: () => dopo && dopo() });
+}
+// arrivo dall'intro dell'altro sito (?from=ilcolle): stessa entrata, senza intro
+export function arrivoDaIlColle() {
+  if (!/[?&]from=ilcolle\b/.test(location.search)) return false;
+  entrataPagina(); return true;
+}
+
 export async function montaIlColle(opts) {
   try { return await monta(opts); }
   catch (e) { smonta(opts); return null; }
@@ -97,7 +117,7 @@ async function monta({ sito, links, onFine, lenis }) {
     <span class="ilc__ang ilc__ang--tr">43°46′ N · 12°29′ E</span>
     <span class="ilc__ang ilc__ang--bl">SASSOCORVARO AUDITORE</span>
     <span class="ilc__ang ilc__ang--br">SCORRI <svg viewBox="0 0 10 22" aria-hidden="true"><path d="M5 1v19M1 16l4 4 4-4"/></svg></span>
-    <div class="ilc__scivolo" aria-hidden="true"></div>`;
+    <div class="ilc__velo" aria-hidden="true"></div>`;
   document.body.appendChild(el);
   const spazio = document.createElement('div');
   spazio.className = 'ilc-spazio'; spazio.setAttribute('aria-hidden', 'true');
@@ -197,33 +217,48 @@ async function monta({ sito, links, onFine, lenis }) {
     return { x: dx + R.pin[id][0] * R.w * k, y: dy + R.pin[id][1] * R.h * k, visibile: true };
   }
 
-  // ---------- ingresso nei locali (scivolo)
-  function entra(id, nome) {
-    if (finito) return;
-    const sc = el.querySelector('.ilc__scivolo');
-    sc.textContent = nome; sc.className = 'ilc__scivolo is-' + id;
-    requestAnimationFrame(() => sc.classList.add('is-on'));
+  // ---------- ingresso nei locali: la discesa continua fino al locale, sale un velo crema dai bordi,
+  //            la pagina entra dall'alto mettendosi a fuoco. Totale ≤ 1,5 s; solo transform, opacity e filter.
+  let uscendo = false;
+  function entra(id) {
+    if (finito || uscendo) return; uscendo = true;
+    const p = pins.find((q) => q.id === id), altri = pins.filter((q) => q !== p);
+    const velo = el.querySelector('.ilc__velo');
+    el.classList.add('is-uscita');                                   // i pallini non seguono più lo scroll
+    const t = gsap.timeline();
+    if (terra) {
+      const o = { k: 0 };
+      t.to(o, { k: 1, duration: .6, ease: 'power2.inOut', onUpdate: () => terra.scendi(p.x, p.z, o.k) }, 0);
+    } else {                                                          // riserva a foto: stesso movimento, ingrandendo verso il pallino
+      const s = posRiserva(id);
+      gsap.set(riservaFine, { transformOrigin: `${s.x}px ${s.y}px` });
+      t.to(riservaFine, { scale: 1.4, duration: .6, ease: 'power2.inOut' }, 0);
+    }
+    t.to([...altri.map((a) => a.b), p.b.querySelector('.ilc__linea'), p.b.querySelector('.ilc__nome'), '.ilc__testi', '.ilc__ang', '.ilc__luce'],
+        { opacity: 0, duration: .25, ease: 'power1.out' }, 0)
+     .to(p.b.querySelector('.ilc__punto'), { scale: 1.8, opacity: 0, duration: .45, ease: 'power2.out' }, .05)
+     .fromTo(velo, { opacity: 0, scale: 1.35 }, { opacity: 1, scale: 1, duration: .5, ease: 'power2.out' }, .12);
     if (id === sito) {
-      // proprio locale: sotto lo scivolo l'intro si chiude, poi lo scivolo esce e resta la prima schermata
-      setTimeout(() => {
-        chiudi();
-        gsap.to(el, { xPercent: -100, duration: .7, ease: 'power3.inOut', delay: .15, onComplete: () => { terra && terra.distruggi(); el.remove(); } });
-      }, 700);
+      t.add(() => { chiudi(); entrataPagina({ dopo: pulisci }); }, .55)       // la pagina parte sotto, già nella posizione iniziale
+       .to(el, { opacity: 0, duration: .5, ease: 'power1.inOut' }, .55);
     } else {
       const u = links[id];
-      setTimeout(() => { location.href = u + (u.includes('?') ? '&' : '?') + 'from=ilcolle&utm_source=ilcolle&utm_medium=intro'; }, 680);
+      t.to(el, { opacity: 0, duration: .4, ease: 'power1.inOut' }, .55)
+       .add(() => { location.href = u + (u.includes('?') ? '&' : '?') + 'from=ilcolle&utm_source=ilcolle&utm_medium=intro'; }, .95);
     }
   }
+  function pulisci() { terra && terra.distruggi(); terra = null; el.remove(); }
   function chiudi() {
     finito = true;
     tl.scrollTrigger && tl.scrollTrigger.kill(); tl.kill();
+    nascondiPagina();                                        // prima di mostrarla: parte trasparente, 40 px più su, sfocata
     spazio.remove(); root.classList.remove('ilc-attiva');
     window.scrollTo(0, 0); lenis && lenis.scrollTo(0, { immediate: true, force: true });
     ST && ST.refresh();
     onFine && onFine();
     if (/[?&]ilcolle=1\b/.test(location.search)) history.replaceState(null, '', location.pathname);
   }
-  window.addEventListener('pageshow', (e) => { if (e.persisted) el.querySelector('.ilc__scivolo').classList.remove('is-on'); });
+  window.addEventListener('pageshow', (e) => { if (e.persisted) { gsap.set(el, { opacity: 1 }); uscendo = false; } });
   return { entra };
 }
 
@@ -274,10 +309,9 @@ function stile(T) {
 @media (hover: hover){ .ilc__pin:hover .ilc__punto{ transform:scale(1.25); background:rgba(251,247,239,.6); } }
 .ilc__pin:active .ilc__punto{ transform:scale(1.25); background:rgba(251,247,239,.6); }
 .ilc__pin:focus-visible .ilc__nome{ outline:1px solid #FBF7EF; outline-offset:4px; }
-.ilc__scivolo{ position:absolute; inset:0; z-index:5; display:grid; place-items:center; transform:translateX(100%);
-  transition:transform .7s cubic-bezier(.65,0,.35,1); background:#F7F2E9; color:#3B4339; font:400 1.8rem/1 'Cormorant Garamond', Georgia, serif; pointer-events:none; }
-.ilc__scivolo.is-pincio{ background:#E8F0EC; color:#1F4A4A; }
-.ilc__scivolo.is-on{ transform:translateX(0); }
+.ilc__velo{ position:absolute; inset:-10%; z-index:5; pointer-events:none; opacity:0;
+  background:radial-gradient(ellipse 70% 62% at 50% 50%, rgba(245,240,230,0) 0%, rgba(245,240,230,.35) 45%, rgba(245,240,230,.88) 78%, #F5F0E6 100%); }
+.ilc.is-uscita .ilc__pin{ pointer-events:none; }
 .ilc-spazio{ height:240vh; height:240svh; }`;
   document.head.appendChild(s);
 }

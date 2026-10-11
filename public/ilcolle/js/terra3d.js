@@ -14,7 +14,7 @@
 
    Uso:
      const terra = await createTerra(contenitore, { base, v, camera: (meta, mobile) => ({ da, a }) });
-     terra.progress(0..1), terra.pausa(bool), terra.distruggi(), terra.lento (Promise)
+     terra.progress(0..1), terra.scendi(x, z, k), terra.pausa(bool), terra.distruggi(), terra.lento (Promise)
    Coordinate: x = est, z = sud (metri), centro area = 0,0.
    ========================================================= */
 const THREE_URL = 'https://cdn.jsdelivr.net/npm/three@0.169.0/build/three.module.min.js';
@@ -259,16 +259,17 @@ export async function createTerra(el, opts = {}) {
   let prog = 0;
   const t0 = performance.now();
   const lerp = (a, b, t) => a + (b - a) * t, ease = (t) => t * t * (3 - 2 * t);
+  const tuffo = { x: 0, z: 0, k: 0 };                 // discesa finale verso un locale (al tocco del pallino)
   function piazzaCamera(now) {
-    const p = ease(prog), A = cam.da, B = cam.a;
-    const tx = lerp(A.target[0], B.target[0], p), tz = lerp(A.target[1], B.target[1], p);
-    const dist = lerp(A.distanza, B.distanza, p);
+    const p = ease(prog), A = cam.da, B = cam.a, kt = ease(tuffo.k);
+    const tx = lerp(lerp(A.target[0], B.target[0], p), tuffo.x, kt), tz = lerp(lerp(A.target[1], B.target[1], p), tuffo.z, kt);
+    const dist = lerp(A.distanza, B.distanza, p) * (1 - .5 * kt);
     const inc = THREE.MathUtils.degToRad(lerp(A.inclinazione, B.inclinazione, p));
     // azimut: direzione (sul terreno) dal punto guardato verso la camera; 0 = da sud
     let daz = (B.azimut || 0) - (A.azimut || 0);
     const az = THREE.MathUtils.degToRad((A.azimut || 0) + daz * p);
     const s = (now - t0) / 1000;
-    const rx = Math.sin(s * .11) * dist * .012, rz = Math.cos(s * .08) * dist * .010;
+    const rx = Math.sin(s * .11) * dist * .012 * (1 - kt), rz = Math.cos(s * .08) * dist * .010 * (1 - kt);
     const ty = quotaA(tx, tz);
     const ox = Math.sin(az), oz = Math.cos(az);
     camera.position.set(tx + rx + ox * Math.sin(inc) * dist, ty + Math.cos(inc) * dist, tz + rz + oz * Math.sin(inc) * dist);
@@ -337,6 +338,7 @@ export async function createTerra(el, opts = {}) {
   const api = {
     fps: null, lento, renderer, camera, scene, meta, quotaA,
     progress(p) { prog = Math.min(1, Math.max(0, p)); },
+    scendi(x, z, k) { tuffo.x = x; tuffo.z = z; tuffo.k = Math.min(1, Math.max(0, k)); },   // k 0..1: la camera scende verso (x, z)
     schermo(x, z) {                                    // posizione a schermo (px CSS) di un punto sul terreno
       const v = new THREE.Vector3(x, quotaA(x, z) + 6, z).project(camera);
       return { x: (v.x + 1) / 2 * el.clientWidth, y: (1 - v.y) / 2 * el.clientHeight, visibile: v.z < 1 && Math.abs(v.x) < 1.05 && Math.abs(v.y) < 1.05 };
