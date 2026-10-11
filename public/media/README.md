@@ -8,12 +8,14 @@ redeploy (or restart `npm run dev`).
 ## Videos — MP4 (H.264, yuv420p), muted, loopable
 | File | Section | Aspect | Duration | Resolution (min → ideal) |
 |------|---------|--------|----------|--------------------------|
-| `hero.mp4`   | Hero (full-bleed) | 16:9 horizontal | 8–12s loop | 1920×1080 → 3840×2160 |
+| `hero-m.mp4` | Hero · telefono (attuale) | 9:16 verticale | 8–12 s loop | 720×1280, ≤ 2–3 MB, senza audio — **c'è** (1,2 MB) |
+| `hero-d.mp4` | Hero · computer | **16:9 orizzontale** | 8–12 s loop | **1920×1080**, H.264, senza audio, ≤ 6 MB — **DA GIRARE** (oggi è la stessa ripresa verticale) |
 | `sunset.mp4` | Sunset finale     | 16:9 horizontal | 10–15s     | 1920×1080 → 4K |
 | `pool.mp4`   | Pool Experience   | 16:9 horizontal | 8–12s loop | 1920×1080 → 4K |
 
-Optional poster stills (first frame, shown while the video loads):
-`hero.jpg`, `sunset.jpg`, `pool.jpg`.
+Foto fissa mostrata subito (primo fotogramma, < 150 KB): `hero-poster.webp` (c'è, 23 KB) — serve anche una versione orizzontale
+`hero-poster-d.webp` quando arriva il video 1920×1080. Poi `sunset.jpg`, `pool.jpg`.
+Il video parte solo dopo il caricamento della pagina; con Risparmio dati o rete lenta resta la foto.
 
 ## Photos — JPEG, sRGB, warm exposure, no watermark
 | File | Section | Aspect | Resolution (min → ideal) |
